@@ -6,7 +6,7 @@ public class Invoice {
     private Double PointSale;
     private Long number;
     private Provider provider;
-    private Double netEngraved;
+    private Double engraved;
     private Double exempt;
     private Double iva105;
     private Double iva21;
@@ -18,12 +18,12 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long id, Double pointSale, Long number, Provider provider, Double netEngraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
+    public Invoice(Long id, Double pointSale, Long number, Provider provider, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.id = id;
         PointSale = pointSale;
         this.number = number;
         this.provider = provider;
-        this.netEngraved = netEngraved;
+        this.engraved = engraved;
         this.exempt = exempt;
         this.iva105 = iva105;
         this.iva21 = iva21;
@@ -65,12 +65,12 @@ public class Invoice {
         this.provider = provider;
     }
 
-    public Double getNetEngraved() {
-        return netEngraved;
+    public Double getEngraved() {
+        return engraved;
     }
 
-    public void setNetEngraved(Double netEngraved) {
-        this.netEngraved = netEngraved;
+    public void setEngraved(Double engraved) {
+        this.engraved = engraved;
     }
 
     public Double getExempt() {
