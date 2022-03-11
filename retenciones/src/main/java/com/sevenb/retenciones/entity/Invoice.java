@@ -2,127 +2,130 @@ package com.sevenb.retenciones.entity;
 
 public class Invoice {
 
-    private long id;
-    private double pv;
-    private long number;
-    private long providerFk;
-    private double net;
-    private double notTaxed;
-    private double iva_105;
-    private double iva_21;
-    private double iibb;
-    private double taxedOthers;
-    private double municipality;
-    private boolean impacted;
+    private Long id;
+    private Double pv;
+    private Long number;
+    private Provider provider;
+    private Double netEngraved;
+    private Double notTaxed;
+    private Double iva105;
+    private Double iva21;
+    private Double iibb;
+    private Double taxedOthers;
+    private Double municipality;
+    private Boolean impacted;
 
-    public Invoice(long id, double pv, long number, long providerFk, double net, double notTaxed, double iva_105, double iva_21, double iibb, double taxedOthers, double municipality, boolean impacted) {
+    public Invoice() {
+    }
+
+    public Invoice(Long id, Double pv, Long number, Provider provider, Double netEngraved, Double notTaxed, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.id = id;
         this.pv = pv;
         this.number = number;
-        this.providerFk = providerFk;
-        this.net = net;
+        this.provider = provider;
+        this.netEngraved = netEngraved;
         this.notTaxed = notTaxed;
-        this.iva_105 = iva_105;
-        this.iva_21 = iva_21;
+        this.iva105 = iva105;
+        this.iva21 = iva21;
         this.iibb = iibb;
         this.taxedOthers = taxedOthers;
         this.municipality = municipality;
         this.impacted = impacted;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public double getPv() {
+    public Double getPv() {
         return pv;
     }
 
-    public void setPv(double pv) {
+    public void setPv(Double pv) {
         this.pv = pv;
     }
 
-    public long getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 
-    public long getProviderFk() {
-        return providerFk;
+    public Provider getProvider() {
+        return provider;
     }
 
-    public void setProviderFk(long providerFk) {
-        this.providerFk = providerFk;
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
-    public double getNet() {
-        return net;
+    public Double getNetEngraved() {
+        return netEngraved;
     }
 
-    public void setNet(double net) {
-        this.net = net;
+    public void setNetEngraved(Double netEngraved) {
+        this.netEngraved = netEngraved;
     }
 
-    public double getNotTaxed() {
+    public Double getNotTaxed() {
         return notTaxed;
     }
 
-    public void setNotTaxed(double notTaxed) {
+    public void setNotTaxed(Double notTaxed) {
         this.notTaxed = notTaxed;
     }
 
-    public double getIva_105() {
-        return iva_105;
+    public Double getIva105() {
+        return iva105;
     }
 
-    public void setIva_105(double iva_105) {
-        this.iva_105 = iva_105;
+    public void setIva105(Double iva105) {
+        this.iva105 = iva105;
     }
 
-    public double getIva_21() {
-        return iva_21;
+    public Double getIva21() {
+        return iva21;
     }
 
-    public void setIva_21(double iva_21) {
-        this.iva_21 = iva_21;
+    public void setIva21(Double iva21) {
+        this.iva21 = iva21;
     }
 
-    public double getIibb() {
+    public Double getIibb() {
         return iibb;
     }
 
-    public void setIibb(double iibb) {
+    public void setIibb(Double iibb) {
         this.iibb = iibb;
     }
 
-    public double getTaxedOthers() {
+    public Double getTaxedOthers() {
         return taxedOthers;
     }
 
-    public void setTaxedOthers(double taxedOthers) {
+    public void setTaxedOthers(Double taxedOthers) {
         this.taxedOthers = taxedOthers;
     }
 
-    public double getMunicipality() {
+    public Double getMunicipality() {
         return municipality;
     }
 
-    public void setMunicipality(double municipality) {
+    public void setMunicipality(Double municipality) {
         this.municipality = municipality;
     }
 
-    public boolean isImpacted() {
+    public Boolean getImpacted() {
         return impacted;
     }
 
-    public void setImpacted(boolean impacted) {
+    public void setImpacted(Boolean impacted) {
         this.impacted = impacted;
     }
 }

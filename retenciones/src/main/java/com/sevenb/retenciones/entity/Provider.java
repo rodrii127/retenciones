@@ -1,15 +1,18 @@
 package com.sevenb.retenciones.entity;
 
-public class Providers {
+public class Provider {
 
-    private long id;
+    private Long id;
     private String companyName;
     private String cuit;
     private String address;
     private String phone;
     private String fiscalCondition;
 
-    public Providers(long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
+    public Provider() {
+    }
+
+    public Provider(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
         this.id = id;
         this.companyName = companyName;
         this.cuit = cuit;
@@ -18,11 +21,11 @@ public class Providers {
         this.fiscalCondition = fiscalCondition;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

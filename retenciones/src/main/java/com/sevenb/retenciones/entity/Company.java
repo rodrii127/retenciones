@@ -2,27 +2,30 @@ package com.sevenb.retenciones.entity;
 
 public class Company {
 
-    private long id;
+    private Long id;
     private String companyName;
     private String cuit;
     private String address;
     private String phone;
-    private String conditionFiscal;
+    private String fiscalCondition;
 
-    public Company(long id, String companyName, String cuit, String address, String phone, String conditionFiscal) {
+    public Company() {
+    }
+
+    public Company(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
         this.id = id;
         this.companyName = companyName;
         this.cuit = cuit;
         this.address = address;
         this.phone = phone;
-        this.conditionFiscal = conditionFiscal;
+        this.fiscalCondition = fiscalCondition;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -58,11 +61,11 @@ public class Company {
         this.phone = phone;
     }
 
-    public String getConditionFiscal() {
-        return conditionFiscal;
+    public String getFiscalCondition() {
+        return fiscalCondition;
     }
 
-    public void setConditionFiscal(String conditionFiscal) {
-        this.conditionFiscal = conditionFiscal;
+    public void setFiscalCondition(String fiscalCondition) {
+        this.fiscalCondition = fiscalCondition;
     }
 }

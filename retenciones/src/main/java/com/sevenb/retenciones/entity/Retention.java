@@ -2,25 +2,29 @@ package com.sevenb.retenciones.entity;
 
 public class Retention {
 
-    private long id;
+    private Long id;
     private String date;
-    private long payOrderNumberFk;
-    private long retentionType;
-    private double retentionAmount;
+    private PayOrder payOrder;
+    private RetentionType retentionType;
+    private Double retentionAmount;
 
-    public Retention(long id, String date, long payOrderNumberFk, long retentionType, double retentionAmount) {
+
+    public Retention() {
+    }
+
+    public Retention(Long id, String date, PayOrder payOrder, RetentionType retentionType, Double retentionAmount) {
         this.id = id;
         this.date = date;
-        this.payOrderNumberFk = payOrderNumberFk;
+        this.payOrder = payOrder;
         this.retentionType = retentionType;
         this.retentionAmount = retentionAmount;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -32,27 +36,27 @@ public class Retention {
         this.date = date;
     }
 
-    public long getPayOrderNumberFk() {
-        return payOrderNumberFk;
+    public PayOrder getPayOrder() {
+        return payOrder;
     }
 
-    public void setPayOrderNumberFk(long payOrderNumberFk) {
-        this.payOrderNumberFk = payOrderNumberFk;
+    public void setPayOrder(PayOrder payOrder) {
+        this.payOrder = payOrder;
     }
 
-    public long getRetentionType() {
+    public RetentionType getRetentionType() {
         return retentionType;
     }
 
-    public void setRetentionType(long retentionType) {
+    public void setRetentionType(RetentionType retentionType) {
         this.retentionType = retentionType;
     }
 
-    public double getRetentionAmount() {
+    public Double getRetentionAmount() {
         return retentionAmount;
     }
 
-    public void setRetentionAmount(double retentionAmount) {
+    public void setRetentionAmount(Double retentionAmount) {
         this.retentionAmount = retentionAmount;
     }
 }
