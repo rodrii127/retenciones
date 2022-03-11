@@ -2,21 +2,24 @@ package com.sevenb.retenciones.entity;
 
 public class RetentionType {
 
-    private long id;
+    private Long id;
     private String description;
-    private double aliquot;
+    private Double aliquot;
 
-    public RetentionType(long id, String description, double aliquot) {
+    public RetentionType() {
+    }
+
+    public RetentionType(Long id, String description, Double aliquot) {
         this.id = id;
         this.description = description;
         this.aliquot = aliquot;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -28,11 +31,11 @@ public class RetentionType {
         this.description = description;
     }
 
-    public double getAliquot() {
+    public Double getAliquot() {
         return aliquot;
     }
 
-    public void setAliquot(double aliquot) {
+    public void setAliquot(Double aliquot) {
         this.aliquot = aliquot;
     }
 }

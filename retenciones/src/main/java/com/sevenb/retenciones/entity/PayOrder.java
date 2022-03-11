@@ -2,29 +2,32 @@ package com.sevenb.retenciones.entity;
 
 public class PayOrder {
 
-    private long id;
+    private Long id;
     private String date;
-    private long providersFk;
+    private Long providers;
     private String payOrderNumber;
     private String payMode;
-    private String payReceiptNumber;
-    private long companyFK;
+    private String payModeNumber;
+    private Company company;
 
-    public PayOrder(long id, String date, long providersFk, String payOrderNumber, String payMode, String payReceiptNumber, long companyFK) {
-        this.id = id;
-        this.date = date;
-        this.providersFk = providersFk;
-        this.payOrderNumber = payOrderNumber;
-        this.payMode = payMode;
-        this.payReceiptNumber = payReceiptNumber;
-        this.companyFK = companyFK;
+    public PayOrder() {
     }
 
-    public long getId() {
+    public PayOrder(Long id, String date, Long providers, String payOrderNumber, String payMode, String payModeNumber, Company company) {
+        this.id = id;
+        this.date = date;
+        this.providers = providers;
+        this.payOrderNumber = payOrderNumber;
+        this.payMode = payMode;
+        this.payModeNumber = payModeNumber;
+        this.company = company;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,12 +39,12 @@ public class PayOrder {
         this.date = date;
     }
 
-    public long getProvidersFk() {
-        return providersFk;
+    public Long getProviders() {
+        return providers;
     }
 
-    public void setProvidersFk(long providersFk) {
-        this.providersFk = providersFk;
+    public void setProviders(Long providers) {
+        this.providers = providers;
     }
 
     public String getPayOrderNumber() {
@@ -60,19 +63,19 @@ public class PayOrder {
         this.payMode = payMode;
     }
 
-    public String getPayReceiptNumber() {
-        return payReceiptNumber;
+    public String getPayModeNumber() {
+        return payModeNumber;
     }
 
-    public void setPayReceiptNumber(String payReceiptNumber) {
-        this.payReceiptNumber = payReceiptNumber;
+    public void setPayModeNumber(String payModeNumber) {
+        this.payModeNumber = payModeNumber;
     }
 
-    public long getCompanyFK() {
-        return companyFK;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCompanyFK(long companyFK) {
-        this.companyFK = companyFK;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 }
