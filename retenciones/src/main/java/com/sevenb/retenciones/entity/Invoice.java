@@ -3,11 +3,11 @@ package com.sevenb.retenciones.entity;
 public class Invoice {
 
     private Long id;
-    private Double pv;
+    private Double PointSale;
     private Long number;
     private Provider provider;
     private Double netEngraved;
-    private Double notTaxed;
+    private Double exempt;
     private Double iva105;
     private Double iva21;
     private Double iibb;
@@ -18,13 +18,13 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long id, Double pv, Long number, Provider provider, Double netEngraved, Double notTaxed, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
+    public Invoice(Long id, Double pointSale, Long number, Provider provider, Double netEngraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.id = id;
-        this.pv = pv;
+        PointSale = pointSale;
         this.number = number;
         this.provider = provider;
         this.netEngraved = netEngraved;
-        this.notTaxed = notTaxed;
+        this.exempt = exempt;
         this.iva105 = iva105;
         this.iva21 = iva21;
         this.iibb = iibb;
@@ -41,12 +41,12 @@ public class Invoice {
         this.id = id;
     }
 
-    public Double getPv() {
-        return pv;
+    public Double getPointSale() {
+        return PointSale;
     }
 
-    public void setPv(Double pv) {
-        this.pv = pv;
+    public void setPointSale(Double pointSale) {
+        PointSale = pointSale;
     }
 
     public Long getNumber() {
@@ -73,12 +73,12 @@ public class Invoice {
         this.netEngraved = netEngraved;
     }
 
-    public Double getNotTaxed() {
-        return notTaxed;
+    public Double getExempt() {
+        return exempt;
     }
 
-    public void setNotTaxed(Double notTaxed) {
-        this.notTaxed = notTaxed;
+    public void setExempt(Double exempt) {
+        this.exempt = exempt;
     }
 
     public Double getIva105() {
