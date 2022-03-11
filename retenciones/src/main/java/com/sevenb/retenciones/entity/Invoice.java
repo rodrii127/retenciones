@@ -3,7 +3,7 @@ package com.sevenb.retenciones.entity;
 public class Invoice {
 
     private Long id;
-    private Double PointSale;
+    private Double pointSale;
     private Long number;
     private Provider provider;
     private Double engraved;
@@ -20,7 +20,7 @@ public class Invoice {
 
     public Invoice(Long id, Double pointSale, Long number, Provider provider, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.id = id;
-        PointSale = pointSale;
+        this.pointSale = pointSale;
         this.number = number;
         this.provider = provider;
         this.engraved = engraved;
@@ -42,11 +42,11 @@ public class Invoice {
     }
 
     public Double getPointSale() {
-        return PointSale;
+        return pointSale;
     }
 
     public void setPointSale(Double pointSale) {
-        PointSale = pointSale;
+        this.pointSale = pointSale;
     }
 
     public Long getNumber() {
