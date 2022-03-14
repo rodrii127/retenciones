@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RetencionesApplication {
+public class RetentionApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RetencionesApplication.class, args);
+		SpringApplication.run(RetentionApplication.class, args);
 	}
 
 }
