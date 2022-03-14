@@ -11,7 +11,7 @@ public class JWTConstants {
     public final static String DEFAULT_ROLE = "ADMIN";
     public final static String AUTHORIZATION_HEADER = "Authorization";
     public final static String BEARER_TOKEN = "Bearer ";
-    public final static String PATH_AUTHORIZATION_TOKEN_FILTER = "**/v-camp/users/**";
+    public final static String PATH_AUTHORIZATION_TOKEN_FILTER = "**/retenciones/users/**";
     public final static String PATH_LOGIN = "/users/login";
     public final static int EXPIRATION_TIME = 1200000;
 }

@@ -70,7 +70,6 @@ public class JWTSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers(JWTConstants.PATH_LOGIN, "/content").permitAll()
-            .antMatchers("/users/find-all").hasRole(JWTConstants.DEFAULT_ROLE)
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(new JWTAuthenticationTokenFilter("/login", authenticationManager()),
