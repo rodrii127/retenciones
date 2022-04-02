@@ -1,26 +1,34 @@
 package com.sevenb.retenciones.entity;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "pay_order")
 public class PayOrder {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String date;
-    private Long providers;
+    private Date date;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Provider provider;
     private String payOrderNumber;
     private String payMode;
-    private String payModeNumber;
+     private String payModeNumber;
+    @ManyToOne(fetch = FetchType.EAGER)
     private Company company;
 
     public PayOrder() {
     }
 
-    public PayOrder(Long id, String date, Long providers, String payOrderNumber, String payMode, String payModeNumber, Company company) {
-        this.id = id;
+    public PayOrder(Date date, Provider provider, String payOrderNumber, String payMode, String payModeNumber, Company company) {
         this.date = date;
-        this.providers = providers;
+        provider = provider;
         this.payOrderNumber = payOrderNumber;
         this.payMode = payMode;
         this.payModeNumber = payModeNumber;
-        this.company = company;
+       company = company;
     }
 
     public Long getId() {
@@ -31,20 +39,20 @@ public class PayOrder {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public Long getProviders() {
-        return providers;
+    public Provider getProvider() {
+        return provider;
     }
 
-    public void setProviders(Long providers) {
-        this.providers = providers;
+    public void setProvider(Provider provider) {
+        provider = provider;
     }
 
     public String getPayOrderNumber() {
@@ -76,6 +84,6 @@ public class PayOrder {
     }
 
     public void setCompany(Company company) {
-        this.company = company;
+        company = company;
     }
 }

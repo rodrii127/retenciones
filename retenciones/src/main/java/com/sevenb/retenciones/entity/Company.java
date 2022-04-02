@@ -1,12 +1,19 @@
 package com.sevenb.retenciones.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "company")
 public class Company {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String companyName;
     private String cuit;
     private String address;
     private String phone;
+    private String email;
     private String fiscalCondition;
 
     public Company() {

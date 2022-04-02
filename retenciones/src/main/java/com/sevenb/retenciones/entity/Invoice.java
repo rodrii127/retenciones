@@ -1,10 +1,19 @@
 package com.sevenb.retenciones.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "invoice")
 public class Invoice {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double pointSale;
+    @Column(name = "point_sale", nullable = false)
+    private Integer pointSale;
+    @Column(name = "number", nullable = false)
     private Long number;
+    @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;
     private Double engraved;
     private Double exempt;
@@ -18,11 +27,10 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Long id, Double pointSale, Long number, Provider provider, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
-        this.id = id;
+    public Invoice(Integer pointSale, Long number, Provider provider, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.pointSale = pointSale;
         this.number = number;
-        this.provider = provider;
+        provider = provider;
         this.engraved = engraved;
         this.exempt = exempt;
         this.iva105 = iva105;
@@ -41,11 +49,11 @@ public class Invoice {
         this.id = id;
     }
 
-    public Double getPointSale() {
+    public Integer getPointSale() {
         return pointSale;
     }
 
-    public void setPointSale(Double pointSale) {
+    public void setPointSale(Integer pointSale) {
         this.pointSale = pointSale;
     }
 
@@ -62,7 +70,7 @@ public class Invoice {
     }
 
     public void setProvider(Provider provider) {
-        this.provider = provider;
+        provider = provider;
     }
 
     public Double getEngraved() {

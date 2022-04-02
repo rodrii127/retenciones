@@ -1,9 +1,20 @@
 package com.sevenb.retenciones.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+@Entity
+@Table(name = "retention_type")
 public class RetentionType {
 
+    @Id
     private Long id;
+    @Column(name = "description", nullable = false)
     private String description;
+    @Column(name = "aliquot",nullable = false)
     private Double aliquot;
 
     public RetentionType() {

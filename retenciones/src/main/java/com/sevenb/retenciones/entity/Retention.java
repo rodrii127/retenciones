@@ -1,23 +1,33 @@
 package com.sevenb.retenciones.entity;
 
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name = "retention")
 public class Retention {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String date;
-    private PayOrder payOrder;
+    @Column(name = "date", nullable = false)
+    private Date date;
+    @ManyToOne(fetch = FetchType.EAGER)
     private RetentionType retentionType;
+    @Column(name = "retention_amount", nullable = false)
     private Double retentionAmount;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Invoice> invoice;
 
     public Retention() {
     }
 
-    public Retention(Long id, String date, PayOrder payOrder, RetentionType retentionType, Double retentionAmount) {
-        this.id = id;
+    public Retention(Date date, RetentionType retentionType, Double retentionAmount, List<Invoice> invoice) {
         this.date = date;
-        this.payOrder = payOrder;
         this.retentionType = retentionType;
         this.retentionAmount = retentionAmount;
+        this.invoice = invoice;
     }
 
     public Long getId() {
@@ -28,20 +38,12 @@ public class Retention {
         this.id = id;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
-    }
-
-    public PayOrder getPayOrder() {
-        return payOrder;
-    }
-
-    public void setPayOrder(PayOrder payOrder) {
-        this.payOrder = payOrder;
     }
 
     public RetentionType getRetentionType() {
@@ -58,5 +60,13 @@ public class Retention {
 
     public void setRetentionAmount(Double retentionAmount) {
         this.retentionAmount = retentionAmount;
+    }
+
+    public List<Invoice> getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(List<Invoice> invoice) {
+        this.invoice = invoice;
     }
 }
