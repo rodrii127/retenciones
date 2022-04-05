@@ -11,11 +11,11 @@ public class Retention {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "date", nullable = false)
+    @Column(nullable = false)
     private Date date;
     @ManyToOne(fetch = FetchType.EAGER)
     private RetentionType retentionType;
-    @Column(name = "retention_amount", nullable = false)
+    @Column(nullable = false)
     private Double retentionAmount;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Invoice> invoice;

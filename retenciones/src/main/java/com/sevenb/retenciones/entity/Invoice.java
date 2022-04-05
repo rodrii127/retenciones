@@ -10,9 +10,9 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "point_sale", nullable = false)
+    @Column(nullable = false)
     private Integer pointSale;
-    @Column(name = "number", nullable = false)
+    @Column(nullable = false)
     private Long number;
     @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;

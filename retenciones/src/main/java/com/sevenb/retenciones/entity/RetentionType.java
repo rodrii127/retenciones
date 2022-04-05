@@ -12,9 +12,9 @@ public class RetentionType {
 
     @Id
     private Long id;
-    @Column(name = "description", nullable = false)
+    @Column(nullable = false)
     private String description;
-    @Column(name = "aliquot",nullable = false)
+    @Column(nullable = false)
     private Double aliquot;
 
     public RetentionType() {

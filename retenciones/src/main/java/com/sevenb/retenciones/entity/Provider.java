@@ -9,15 +9,11 @@ public class Provider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "company_name")
     private String companyName;
-    @Column(name = "cuit")
+    @Column(nullable = false)
     private String cuit;
-    @Column(name = "address")
     private String address;
-    @Column(name = "phone")
     private String phone;
-    @Column(name = "condition_fiscal")
     private String fiscalCondition;
 
     public Provider() {
