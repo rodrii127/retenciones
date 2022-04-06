@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/invoices")
+@RequestMapping(value ="/invoice", produces = "application/json")
 class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
 
-    @PostMapping
+    @PostMapping(produces = "application/json")
     public Invoice save(@RequestBody Invoice invoice){
         return invoiceService.save(invoice);
     }
@@ -26,7 +26,7 @@ class InvoiceController {
 
     @GetMapping("/{id}")
     public Invoice findInvoiceId(@PathVariable Long id){
-        return invoiceService.findById(id);
+                return invoiceService.findById(id);
     }
 
     @PutMapping("/{id}")
