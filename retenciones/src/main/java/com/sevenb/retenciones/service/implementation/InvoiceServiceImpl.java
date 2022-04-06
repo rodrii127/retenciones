@@ -1,11 +1,10 @@
-package com.sevenb.retenciones.service;
+package com.sevenb.retenciones.service.implementation;
 
-import com.sevenb.retenciones.dao.InvoiceDao;
+import com.sevenb.retenciones.repository.InvoiceRepository;
 import com.sevenb.retenciones.entity.Invoice;
+import com.sevenb.retenciones.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 import java.util.List;
@@ -15,23 +14,22 @@ import java.util.List;
 public class InvoiceServiceImpl implements InvoiceService {
 
         @Autowired
-        private InvoiceDao invoiceDao;
+        private InvoiceRepository invoiceRepository;
 
         @Override
         public Invoice save(Invoice invoice){
-            return invoiceDao.save(invoice);
+            return invoiceRepository.save(invoice);
         }
 
          @Override
          public List<Invoice> findAll(){
-            return (List<Invoice>) invoiceDao.findAll();
-
+            return (List<Invoice>) invoiceRepository.findAll();
          }
 
     @Override
     public Invoice findById(Long id) {
 
-        return  invoiceDao.findById(id).orElse(null);
+        return  invoiceRepository.findById(id).orElse(null);
     }
     @Override
     public Invoice update( Invoice invoice, Long id){
@@ -49,7 +47,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceCurrent.setMunicipality(invoice.getMunicipality());
         invoiceCurrent.setImpacted(invoice.getImpacted());
 
-        return invoiceDao.save(invoiceCurrent);
+        return invoiceRepository.save(invoiceCurrent);
 
     }
 
