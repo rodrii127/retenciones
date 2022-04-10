@@ -23,7 +23,7 @@ import com.sevenb.retenciones.entity.User;
 import com.sevenb.retenciones.repository.UserRepository;
 import com.sevenb.retenciones.security.JWTGenerator;
 import com.sevenb.retenciones.security.entity.JWTUser;
-import com.sevenb.retenciones.service.UserService;
+import com.sevenb.retenciones.service.definition.UserService;
 import com.sevenb.retenciones.utils.JWTConstants;
 
 /**

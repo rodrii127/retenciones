@@ -1,4 +1,4 @@
-package com.sevenb.retenciones.controller;
+package com.sevenb.retenciones.controller.implementation;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -12,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sevenb.retenciones.entity.User;
-import com.sevenb.retenciones.service.UserService;
+import com.sevenb.retenciones.service.definition.UserService;
 
 /**
  * User controller. Defines path and parameters required for accessing the User database and logging in
  */
 @RestController
 @RequestMapping(value = "/users", produces = "application/json")
-public class UserController {
+public class UserControllerImp {
 
     private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserControllerImp(UserService userService) {
         this.userService = userService;
     }
 
