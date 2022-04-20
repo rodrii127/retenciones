@@ -1,11 +1,13 @@
-package com.sevenb.retenciones.controller;
+package com.sevenb.retenciones.controller.implementation;
 
 import com.sevenb.retenciones.entity.Invoice;
-import com.sevenb.retenciones.service.InvoiceService;
+import com.sevenb.retenciones.service.definition.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value ="/invoice", produces = "application/json")
@@ -31,11 +33,15 @@ class InvoiceController {
 
     @PutMapping("/{id}")
     public Invoice update(@RequestBody Invoice invoice, @PathVariable Long id ) {
-
-
         return invoiceService.update( invoice,id);
-
     }
+
+  /*  @GetMapping
+    public Optional<Invoice> findByDateBetween(LocalDate date1, LocalDate date2){
+
+        return null;
+    }*/
+
 
 
 }

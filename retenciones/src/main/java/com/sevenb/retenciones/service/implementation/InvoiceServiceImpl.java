@@ -2,12 +2,14 @@ package com.sevenb.retenciones.service.implementation;
 
 import com.sevenb.retenciones.repository.InvoiceRepository;
 import com.sevenb.retenciones.entity.Invoice;
-import com.sevenb.retenciones.service.InvoiceService;
+import com.sevenb.retenciones.service.definition.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -49,6 +51,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         return invoiceRepository.save(invoiceCurrent);
 
+    }
+
+    @Override
+    public Optional<Invoice> findByDateBetween(LocalDate date1, LocalDate date2) {
+        return invoiceRepository.findByDateBetween(date1,date2);
     }
 
 

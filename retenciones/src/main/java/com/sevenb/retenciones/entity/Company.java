@@ -16,6 +16,10 @@ public class Company {
     private String email;
     private String fiscalCondition;
 
+    private String habilitationMun;
+
+    private String habilitationDgr;
+
     public Company() {
     }
 
