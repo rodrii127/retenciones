@@ -1,6 +1,8 @@
 package com.sevenb.retenciones.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "invoice")
@@ -16,6 +18,7 @@ public class Invoice {
     private Long number;
     @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;
+    private LocalDate date;
     private Double engraved;
     private Double exempt;
     private Double iva105;
@@ -28,8 +31,10 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Integer pointSale, Long number, Provider provider, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
+    public Invoice(Integer pointSale, Long number, Provider provider,LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
+
         this.pointSale = pointSale;
+        this.date = date;
         this.number = number;
         provider = provider;
         this.engraved = engraved;
@@ -136,5 +141,13 @@ public class Invoice {
 
     public void setImpacted(Boolean impacted) {
         this.impacted = impacted;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -12,22 +13,25 @@ public class Retention {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
     @ManyToOne(fetch = FetchType.EAGER)
     private RetentionType retentionType;
     @Column(nullable = false)
     private Double retentionAmount;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Invoice> invoice;
+    @ManyToOne
+    private Company company;
 
     public Retention() {
     }
 
-    public Retention(Date date, RetentionType retentionType, Double retentionAmount, List<Invoice> invoice) {
+    public Retention(LocalDate date, RetentionType retentionType, Double retentionAmount, List<Invoice> invoice, Company company) {
         this.date = date;
         this.retentionType = retentionType;
         this.retentionAmount = retentionAmount;
         this.invoice = invoice;
+        this.company = company;
     }
 
     public Long getId() {
@@ -38,11 +42,11 @@ public class Retention {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -68,5 +72,24 @@ public class Retention {
 
     public void setInvoice(List<Invoice> invoice) {
         this.invoice = invoice;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public Double calculateBase(){
+        final Double[] base = {0D};
+        invoice.forEach(i -> {
+            base[0] = base[0] + i.getEngraved();});
+        return base[0];
+    }
+
+    public Double calculateRet(){
+         return calculateBase() * retentionType.getAliquot();
     }
 }
