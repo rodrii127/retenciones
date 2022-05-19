@@ -1,26 +1,17 @@
-package com.sevenb.retenciones.entity;
+package com.sevenb.retenciones.dto;
+
+import com.sevenb.retenciones.entity.Company;
+import com.sevenb.retenciones.entity.Provider;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
 
-
-@Entity
-@Table(name = "invoice")
-public class Invoice  {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class InvoiceDto {
     private Long id;
-    @Column(nullable = false)
     private Integer pointSale;
-    @Column(nullable = false)
     private Long number;
-    @ManyToOne
-    private Provider provider;
-    @Column(nullable = false)
+    private Long provider;
     private LocalDate date;
-    @Column(nullable = false)
     private Double engraved;
     private Double exempt;
     private Double iva105;
@@ -29,18 +20,17 @@ public class Invoice  {
     private Double taxedOthers;
     private Double municipality;
     private Boolean impacted;
-    @ManyToOne
-    private Company company;
+    private Long company;
 
-    public Invoice() {
+    public InvoiceDto() {
     }
 
-    public Invoice(Integer pointSale, Long number, Provider provider,LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted, Company company) {
-
+    public InvoiceDto(Long id, Integer pointSale, Long number, Long provider, LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted, Long company) {
+        this.id = id;
         this.pointSale = pointSale;
-        this.date = date;
         this.number = number;
         this.provider = provider;
+        this.date = date;
         this.engraved = engraved;
         this.exempt = exempt;
         this.iva105 = iva105;
@@ -76,13 +66,20 @@ public class Invoice  {
         this.number = number;
     }
 
-    public Provider getProvider() {
+    public Long getProvider() {
         return provider;
     }
 
-    public void setProvider(Provider provider) {
-
+    public void setProvider(Long provider) {
         this.provider = provider;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Double getEngraved() {
@@ -149,23 +146,11 @@ public class Invoice  {
         this.impacted = impacted;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Company getCompany() {
+    public Long getCompany() {
         return company;
     }
-    public void setCompany(Company company) {
+
+    public void setCompany(Long company) {
         this.company = company;
     }
-
-    public Double calculateTotal(){
-        return engraved+exempt+iva105+iva21+iibb+taxedOthers+municipality;
-    }
-
 }

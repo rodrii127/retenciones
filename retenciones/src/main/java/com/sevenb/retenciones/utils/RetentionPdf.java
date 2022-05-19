@@ -35,9 +35,11 @@ public class RetentionPdf {
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
+
             hcell = new PdfPCell(new Phrase("Base Imponible", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
+
 
             retention.getInvoice().forEach(i -> {
                 PdfPCell cell;
@@ -64,13 +66,17 @@ public class RetentionPdf {
             PdfWriter.getInstance(document, out);
             document.open();
 
-            Paragraph fecha = new Paragraph("FECHA : " +  LocalDate.now());
+            Paragraph fecha = new Paragraph("FECHA : " + retention.getDate().toString());
             fecha.setAlignment(Element.ALIGN_RIGHT);
             document.add(fecha);
             document.add(Chunk.NEWLINE);
+
+            Paragraph number = new Paragraph("NUMERO :" + (retention.getId() - 8));
+            number.setAlignment(Element.ALIGN_RIGHT);
+            document.add(number);
             document.add(Chunk.NEWLINE);
 
-            Paragraph title = new Paragraph("COMPROBANTE DE RENTION NRO : " + retention.getId());
+            Paragraph title = new Paragraph("CONSTANCIA DE RETENCION SUFRIDA RESOLUCION GENERAL Nº01/2012-MP");
             title.setAlignment(Element.ALIGN_CENTER);
             title.add(Chunk.NEWLINE);
             document.add(title);
@@ -82,15 +88,18 @@ public class RetentionPdf {
             agenteRetention.add("Razón Social : " + retention.getCompany().getCompanyName());
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Cuit : " + retention.getCompany().getCuit() );
+            agenteRetention.add(Chunk.NEWLINE);
+            agenteRetention.add("Habilitación : 839505/00" );
             document.add(agenteRetention);
             document.add(Chunk.NEWLINE);
+
             document.add(Chunk.NEWLINE);
 
             Paragraph provider = new Paragraph("AGENTE DE RETENIDO :");
             provider.add(Chunk.NEWLINE);
-            provider.add("Razón Social : " + "tumina");
+            provider.add("Razón Social : " + retention.getInvoice().get(0).getProvider().getCompanyName());
             provider.add(Chunk.NEWLINE);
-            provider.add("Cuit : " + "154584515");
+            provider.add("Cuit : " + retention.getInvoice().get(0).getProvider().getCuit());
             document.add(provider);
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
