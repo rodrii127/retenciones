@@ -1,7 +1,9 @@
 package com.sevenb.retenciones.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pay_order")
@@ -10,9 +12,11 @@ public class PayOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date date;
+    private LocalDate date;
     @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Retention> retentionList;
     private String payOrderNumber;
     private String payMode;
      private String payModeNumber;
@@ -22,13 +26,15 @@ public class PayOrder {
     public PayOrder() {
     }
 
-    public PayOrder(Date date, Provider provider, String payOrderNumber, String payMode, String payModeNumber, Company company) {
+    public PayOrder(Long id,LocalDate date, Provider provider, String payOrderNumber, String payMode, String payModeNumber, Company company, List<Retention> retentionList) {
+        this.id = id;
         this.date = date;
-        provider = provider;
+        this.provider = provider;
         this.payOrderNumber = payOrderNumber;
         this.payMode = payMode;
         this.payModeNumber = payModeNumber;
-       company = company;
+       this.company = company;
+       this.retentionList = retentionList;
     }
 
     public Long getId() {
@@ -39,11 +45,11 @@ public class PayOrder {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -52,7 +58,7 @@ public class PayOrder {
     }
 
     public void setProvider(Provider provider) {
-        provider = provider;
+        this.provider = provider;
     }
 
     public String getPayOrderNumber() {
@@ -84,6 +90,51 @@ public class PayOrder {
     }
 
     public void setCompany(Company company) {
-        company = company;
+        this.company = company;
     }
+
+    public List<Retention> getRetentionList() {
+        return retentionList;
+    }
+
+    public void setRetentionList(List<Retention> retentionList) {
+        this.retentionList = retentionList;
+    }
+
+    public Double calculateMunicipality(){
+       final Double[] base = {0D};
+        retentionList.forEach(i -> {
+            if(i.getRetentionType().getId() == 1L)
+                base[0] = base[0] + i.calculateRet();
+        });
+        return base[0];
+    }
+
+    public Double calculateIibb(){
+        final Double[] base = {0D};
+        retentionList.forEach(i -> {
+            if(i.getRetentionType().getId()==2L)
+                base[0] = base[0] + i.calculateRet();
+        });
+        return base[0];
+    }
+    public Double calculateBase(){
+        final Double[] base = {0D};
+        retentionList.forEach(i -> {
+              base[0] = base[0] + i.calculateBase();
+        });
+        return base[0];
+    }
+
+    public Double calculateTotal(){
+        final Double[] base = {0D};
+        retentionList.forEach(i -> {
+            i.getInvoice().forEach(invoice -> {
+                base[0] = base[0] + invoice.calculateTotal();
+            });
+        });
+        return base[0];
+    }
+
+
 }

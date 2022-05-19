@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "company")
@@ -78,5 +79,29 @@ public class Company {
 
     public void setFiscalCondition(String fiscalCondition) {
         this.fiscalCondition = fiscalCondition;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getHabilitationMun() {
+        return habilitationMun;
+    }
+
+    public void setHabilitationMun(String habilitationMun) {
+        this.habilitationMun = habilitationMun;
+    }
+
+    public String getHabilitationDgr() {
+        return habilitationDgr;
+    }
+
+    public void setHabilitationDgr(String habilitationDgr) {
+        this.habilitationDgr = habilitationDgr;
     }
 }

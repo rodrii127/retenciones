@@ -2,7 +2,10 @@ package com.sevenb.retenciones.controller.implementation;
 
 import java.util.List;
 
+import com.sevenb.retenciones.dto.InvoiceDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +24,10 @@ class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
+
     @PostMapping(produces = "application/json")
-    public Invoice save(@RequestBody Invoice invoice) {
-        return invoiceService.save(invoice);
+    public ResponseEntity<?> save(@RequestBody InvoiceDto invoiceDto) {
+        return invoiceService.save(invoiceDto);
     }
 
     @GetMapping
@@ -36,11 +40,9 @@ class InvoiceController {
         return invoiceService.findById(id);
     }
 
-    @PutMapping("/{id}")
     public Invoice update(@RequestBody Invoice invoice, @PathVariable Long id) {
         return invoiceService.update(invoice, id);
     }
-
     @GetMapping("/date")
     public List<Invoice> findByDateBetween(@RequestBody SearchDate searchDate) {
         return invoiceService.findByDateBetween(searchDate.getStartDate(), searchDate.getEndDate());

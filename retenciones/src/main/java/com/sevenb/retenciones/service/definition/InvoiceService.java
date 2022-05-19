@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.sevenb.retenciones.dto.InvoiceDto;
 import com.sevenb.retenciones.entity.Invoice;
+import org.springframework.http.ResponseEntity;
 
 
 public interface InvoiceService {
-    Invoice save(Invoice invoice);
+    ResponseEntity<?> save(InvoiceDto invoiceDto);
 
     List<Invoice> findAll();
 

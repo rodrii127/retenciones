@@ -1,5 +1,6 @@
 package com.sevenb.retenciones.controller.definition;
 
+import com.sevenb.retenciones.dto.RetentionInputDto;
 import com.sevenb.retenciones.entity.Retention;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public interface RetentionController {
@@ -25,7 +27,7 @@ public interface RetentionController {
     @Parameters({
             @Parameter(name = "retention", description = "The retention to be created", required = true)
     })
-    ResponseEntity<?> createRetention(List<Long> idInvoices);
+    ResponseEntity<?> createRetention(RetentionInputDto inputDto);
 
     @Operation(summary = "Get all retention")
     @ApiResponses(value = {
@@ -44,5 +46,7 @@ public interface RetentionController {
     @Parameter(name = "id", description = "The retention id", required = true)
     ResponseEntity<?> retentionPdf(Long id);
 
+    @Parameter(name = "ids", description = "The retention ids", required = true)
+    ResponseEntity<?> retentionMunicipalityCsv(List<Long> ids) throws FileNotFoundException;
 
 }

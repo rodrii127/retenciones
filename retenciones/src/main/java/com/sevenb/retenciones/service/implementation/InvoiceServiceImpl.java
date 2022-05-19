@@ -2,9 +2,15 @@ package com.sevenb.retenciones.service.implementation;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+import com.sevenb.retenciones.dto.InvoiceDto;
+import com.sevenb.retenciones.repository.CompanyRepository;
+import com.sevenb.retenciones.repository.ProviderRepository;
+import com.sevenb.retenciones.service.mapper.InvoiceMapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.sevenb.retenciones.entity.Invoice;
 import com.sevenb.retenciones.repository.InvoiceRepository;
@@ -15,10 +21,20 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private InvoiceRepository invoiceRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    private final static InvoiceMapper invoiceMapper = Mappers.getMapper(InvoiceMapper.class);
+
 
     @Override
-    public Invoice save(Invoice invoice) {
-        return invoiceRepository.save(invoice);
+    public ResponseEntity<?> save(InvoiceDto invoiceDto) {
+        Invoice invoice = invoiceMapper.sourceToDestination(invoiceDto);
+        invoice.setProvider(providerRepository.findById(invoiceDto.getProvider()).get());
+        invoice.setCompany(companyRepository.findById(invoiceDto.getCompany()).get());
+        return new ResponseEntity<>(invoiceRepository.save(invoice), HttpStatus.CREATED);
     }
 
     @Override

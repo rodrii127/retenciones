@@ -18,7 +18,8 @@ public class JWTGenerator {
     public String generate(JWTUser jwtUser) {
         Claims claims = Jwts.claims()
             .setSubject(jwtUser.getUsername())
-            .setIssuedAt(new Date())
+                .setSubject(jwtUser.getUsername())
+                        .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + JWTConstants.EXPIRATION_TIME));
         claims.put(JWTConstants.USER_ID, String.valueOf(jwtUser.getId()));
         claims.put(JWTConstants.ROLE, jwtUser.getRole());

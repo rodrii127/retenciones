@@ -1,15 +1,26 @@
 package com.sevenb.retenciones.controller.implementation;
 
 import com.sevenb.retenciones.controller.definition.RetentionController;
+import com.sevenb.retenciones.dto.RetentionInputDto;
+import com.sevenb.retenciones.security.JWTAuthenticationToken;
+import com.sevenb.retenciones.security.JWTValidator;
+import com.sevenb.retenciones.security.entity.JWTUser;
 import com.sevenb.retenciones.service.definition.RetentionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -18,6 +29,8 @@ public class RetentionControllerImp implements RetentionController {
 
     private final RetentionService retentionService;
 
+    private JWTValidator validator;
+
     @Autowired
     public RetentionControllerImp(RetentionService retentionService) {
         this.retentionService = retentionService;
@@ -25,8 +38,8 @@ public class RetentionControllerImp implements RetentionController {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> createRetention(@RequestBody List<Long> idInvoices) {
-              return retentionService.saveRetention(idInvoices);
+    public ResponseEntity<?> createRetention(@RequestBody RetentionInputDto inputDto) {
+         return retentionService.saveRetention(inputDto);
     }
 
     @Override
@@ -51,5 +64,22 @@ public class RetentionControllerImp implements RetentionController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(new InputStreamResource(bis));
+    }
+
+    @Override
+    @GetMapping(value = "/retentionCsvMunicipality", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<?> retentionMunicipalityCsv(@RequestBody List<Long> ids) throws FileNotFoundException {
+        File file = retentionService.generaFileMunicipality(ids);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 }
