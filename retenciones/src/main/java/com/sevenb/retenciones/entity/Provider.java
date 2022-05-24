@@ -16,7 +16,11 @@ public class Provider {
     private String phone;
     private String fiscalCondition;
 
+    @ManyToOne
+    private Company company;
+
     public Provider() {
+        //No-args constructor
     }
 
     public Provider(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
@@ -74,5 +78,26 @@ public class Provider {
 
     public void setFiscalCondition(String fiscalCondition) {
         this.fiscalCondition = fiscalCondition;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"Provider\":{"
+            + "\"id\":\"" + id + "\""
+            + ", \"companyName\":\"" + companyName + "\""
+            + ", \"cuit\":\"" + cuit + "\""
+            + ", \"address\":\"" + address + "\""
+            + ", \"phone\":\"" + phone + "\""
+            + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
+            + ", \"company\":" + company
+            + "}}";
     }
 }
