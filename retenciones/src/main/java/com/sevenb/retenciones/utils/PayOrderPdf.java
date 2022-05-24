@@ -29,16 +29,14 @@ public class PayOrderPdf {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         // insertar imagen en pfg
-        FileInputStream fis = null;
+        // TODO images will be inserted when they are added to database
+        /*FileInputStream fis = null;
         File file = new File("/home/fernando/Downloads/farmacom.jpeg");
         try {
             fis = new FileInputStream(file);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        }
-
-
-
+        }*/
 
         try {
             PdfPTable table = new PdfPTable(4);
@@ -134,9 +132,10 @@ public class PayOrderPdf {
             document.add(Chunk.NEWLINE);
             // Creating a Document object
 
-            Image img = Image.getInstance("/home/fernando/Downloads/farmacom.jpeg");
+            //// TODO images will be inserted when they are added to database
+            /*Image img = Image.getInstance("/home/fernando/Downloads/farmacom.jpeg");
             img.setAlignment(Element.ALIGN_CENTER);
-            img.scalePercent(25f,25f);
+            img.scalePercent(25f,25f);*/
 
 
             Paragraph agenteRetention = new Paragraph("FECHA EMISION: " + payOrder.getDate());
@@ -171,12 +170,12 @@ public class PayOrderPdf {
             encabezado.setWidthPercentage(100);
             encabezado.setWidths(new int[]{10, 10});
 
-            PdfPCell imaCell;
+            // TODO images will be inserted when they are added to database
+            /*PdfPCell imaCell;
             imaCell = new PdfPCell(img);
             imaCell.setPadding(2);
-            imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-            encabezado.addCell(imaCell);
+            imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);*/
+            /*encabezado.addCell(imaCell);*/
 
             PdfPCell hcellInfo;
             hcellInfo = new PdfPCell(agenteRetention);
@@ -236,7 +235,7 @@ public class PayOrderPdf {
 
             document.close();document.add(Chunk.NEWLINE);
 
-        } catch (DocumentException | IOException ex) {
+        } catch (DocumentException /*| IOException*/ ex) {
             logger.error("Error occurred: {0}", ex);
         }
         return new ByteArrayInputStream(out.toByteArray());
