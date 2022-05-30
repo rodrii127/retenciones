@@ -2,6 +2,7 @@ package com.sevenb.retenciones.controller.definition;
 
 import com.sevenb.retenciones.dto.RetentionInputDto;
 import com.sevenb.retenciones.entity.Retention;
+import com.sevenb.retenciones.entity.SearchDate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -46,7 +47,7 @@ public interface RetentionController {
     @Parameter(name = "id", description = "The retention id", required = true)
     ResponseEntity<?> retentionPdf(Long id);
 
-    @Parameter(name = "ids", description = "The retention ids", required = true)
-    ResponseEntity<?> retentionMunicipalityCsv(List<Long> ids) throws FileNotFoundException;
+    @Parameter(name = "searchDate", description = "Search Retention for date", required = true)
+    ResponseEntity<?> retentionMunicipalityCsv(SearchDate searchDate) throws Exception;
 
 }

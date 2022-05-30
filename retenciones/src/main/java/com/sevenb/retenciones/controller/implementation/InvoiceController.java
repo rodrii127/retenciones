@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sevenb.retenciones.dto.InvoiceDto;
 
+import com.sevenb.retenciones.dto.SearchInvoiceInputDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +31,10 @@ class InvoiceController {
         return invoiceService.save(invoiceDto);
     }
 
-    @GetMapping
+  /*  @GetMapping
     public List<Invoice> invoice() {
         return invoiceService.findAll();
-    }
+    }*/
 
     @GetMapping("/{id}")
     public Invoice findInvoiceId(@PathVariable Long id) {
@@ -43,8 +44,8 @@ class InvoiceController {
     public Invoice update(@RequestBody Invoice invoice, @PathVariable Long id) {
         return invoiceService.update(invoice, id);
     }
-    @GetMapping("/date")
-    public List<Invoice> findByDateBetween(@RequestBody SearchDate searchDate) {
-        return invoiceService.findByDateBetween(searchDate.getStartDate(), searchDate.getEndDate());
+    @GetMapping
+    public List<Invoice> findByFilters(@RequestBody SearchInvoiceInputDto searchInvoice) {
+        return invoiceService.findByFilters(searchInvoice);
     }
 }

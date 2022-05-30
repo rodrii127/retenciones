@@ -5,6 +5,7 @@ import com.sevenb.retenciones.dto.RetentionInputDto;
 import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Invoice;
 import com.sevenb.retenciones.entity.Retention;
+import com.sevenb.retenciones.entity.SearchDate;
 import com.sevenb.retenciones.repository.*;
 import com.sevenb.retenciones.security.JWTValidator;
 import com.sevenb.retenciones.security.entity.JWTUser;
@@ -39,7 +40,7 @@ public class RetentionServiceImp implements RetentionService {
     private final UserRepository userRepository;
 
     private final JWTValidator jwtValidator;
-    private  String username;
+    private String username;
 
 
     @Autowired
@@ -54,20 +55,16 @@ public class RetentionServiceImp implements RetentionService {
     }
 
 
-    @Override
+   /* @Override
     public ResponseEntity<?> saveRetention(RetentionInputDto inputDto) {
-          username = SecurityContextHolder.getContext().getAuthentication().getName();
+   /*   username = SecurityContextHolder.getContext().getAuthentication().getName();
         Retention retention = new Retention();
-        List<Invoice> listInvoice = new ArrayList<>();
-        inputDto.getIdIvoices().forEach(i->listInvoice.add(invoiceRepository.findById(i).get()));
-        retention.setInvoice(listInvoice);
         Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
-        retention.setCompany(company);
         retention.setDate(inputDto.getStartDate());
         retention.setRetentionType(retentionTypeRepository.findById(inputDto.getIdRetentionType()).get());
-        retention.setRetentionAmount(retention.calculateRet());
+
         return new ResponseEntity<>(retentionRepository.save(retention), HttpStatus.CREATED);
-    }
+    }*/
 
     @Override
     public ResponseEntity<?> findAll() {
@@ -87,7 +84,7 @@ public class RetentionServiceImp implements RetentionService {
         throw new NotFoundException("retention-service.retention.not-found");
     }
 
-    @Override
+  /*  @Override
     public ByteArrayInputStream retentionPdf(Long id){
         Optional<Retention> retention = retentionRepository.findById(id);
         RetentionPdf retentionPdf = new RetentionPdf();
@@ -95,16 +92,15 @@ public class RetentionServiceImp implements RetentionService {
           return retentionPdf.generatePdf(retention.get());
         throw new NotFoundException("retentionPdf-service.retention.not-found");
     }
-
+*/
     @Override
-    public File generaFileMunicipality(List<Long> retentionsId) {
-        List<Retention> retentionList = new ArrayList<>();
-        retentionsId.forEach(r-> retentionList.add(retentionRepository.findById(r).get()));
-        MunicipalityCsvUtil municipalityCsvUtil  = new MunicipalityCsvUtil();
-        Company company = companyRepository.findById(2L).get();
-
+    public File generaFileMunicipality(SearchDate searchDate) throws Exception {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
+        List<Retention> retentionList = retentionRepository.findByDateBetweenAndCompany(searchDate.getStartDate(),searchDate.getEndDate(),company);
+        MunicipalityCsvUtil municipalityCsvUtil = new MunicipalityCsvUtil();
         return municipalityCsvUtil.generaFileMunicipality(retentionList, company);
     }
-}
+    }
 
 

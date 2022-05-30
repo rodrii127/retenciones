@@ -2,6 +2,7 @@ package com.sevenb.retenciones.controller.implementation;
 
 import com.sevenb.retenciones.controller.definition.RetentionController;
 import com.sevenb.retenciones.dto.RetentionInputDto;
+import com.sevenb.retenciones.entity.SearchDate;
 import com.sevenb.retenciones.security.JWTAuthenticationToken;
 import com.sevenb.retenciones.security.JWTValidator;
 import com.sevenb.retenciones.security.entity.JWTUser;
@@ -39,7 +40,7 @@ public class RetentionControllerImp implements RetentionController {
     @Override
     @PostMapping
     public ResponseEntity<?> createRetention(@RequestBody RetentionInputDto inputDto) {
-         return retentionService.saveRetention(inputDto);
+         return null;//retentionService.saveRetention(inputDto);
     }
 
     @Override
@@ -55,21 +56,21 @@ public class RetentionControllerImp implements RetentionController {
    @Override
    @GetMapping(value = "/retentionPdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<?> retentionPdf(@PathVariable Long id) {
-        ByteArrayInputStream bis = retentionService.retentionPdf(id);
+    /*    ByteArrayInputStream bis = retentionService.retentionPdf(id);
         var headers = new HttpHeaders();
         headers.add("Content-Disposition", "inline; filename=retentionPdf.pdf");
-
-        return ResponseEntity
+*/
+        return null;/*ResponseEntity
                 .ok()
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(new InputStreamResource(bis));
+                .body(new InputStreamResource(bis));*/
     }
 
     @Override
     @GetMapping(value = "/retentionCsvMunicipality", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<?> retentionMunicipalityCsv(@RequestBody List<Long> ids) throws FileNotFoundException {
-        File file = retentionService.generaFileMunicipality(ids);
+    public ResponseEntity<?> retentionMunicipalityCsv(@RequestBody SearchDate searchDate) throws Exception {
+        File file = retentionService.generaFileMunicipality(searchDate);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");

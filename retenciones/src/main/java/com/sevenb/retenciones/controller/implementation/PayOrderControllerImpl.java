@@ -28,7 +28,7 @@ public class PayOrderControllerImpl implements PayOrderController {
     @Override
     @PostMapping
     public ResponseEntity<?> createPayOrder(@RequestBody PayOrderInputDto payOrderInputDto) {
-        return payOrderService.savePayOrder(payOrderInputDto.getIdPayOder(), payOrderInputDto.getStartDate());
+        return payOrderService.savePayOrder(payOrderInputDto.getIdInvoices(), payOrderInputDto.getStartDate());
     }
 
     @Override

@@ -16,12 +16,14 @@ public class Company {
     private String phone;
     private String email;
     private String fiscalCondition;
-
     private String habilitationMun;
-
     private String habilitationDgr;
+    private Boolean iibb = Boolean.FALSE;
+    private Boolean municipalityRet = Boolean.FALSE;
+    private byte[] imagen;
 
     public Company() {
+        //No-args constructor
     }
 
     public Company(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
@@ -103,5 +105,46 @@ public class Company {
 
     public void setHabilitationDgr(String habilitationDgr) {
         this.habilitationDgr = habilitationDgr;
+    }
+
+    public Boolean getIibb() {
+        return iibb;
+    }
+
+    public void setIibb(Boolean iibb) {
+        this.iibb = iibb;
+    }
+
+    public Boolean getMunicipalityRet() {
+        return municipalityRet;
+    }
+
+    public void setMunicipalityRet(Boolean municipalityRet) {
+        this.municipalityRet = municipalityRet;
+    }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"Company\":{"
+                + "\"id\":\"" + id + "\""
+                + ", \"companyName\":\"" + companyName + "\""
+                + ", \"cuit\":\"" + cuit + "\""
+                + ", \"address\":\"" + address + "\""
+                + ", \"phone\":\"" + phone + "\""
+                + ", \"email\":\"" + email + "\""
+                + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
+                + ", \"habilitationMun\":\"" + habilitationMun + "\""
+                + ", \"habilitationDgr\":\"" + habilitationDgr + "\""
+                + ", \"iibb\":\"" + iibb + "\""
+                + ", \"municipalityRet\":\"" + municipalityRet + "\""
+                + "}}";
     }
 }

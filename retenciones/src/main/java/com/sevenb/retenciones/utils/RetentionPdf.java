@@ -1,68 +1,21 @@
 package com.sevenb.retenciones.utils;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
-
 public class RetentionPdf {
     private static final Logger logger = LoggerFactory.getLogger(RetentionPdf.class);
-    public ByteArrayInputStream generatePdf(Retention retention) {
+
+    public ByteArrayInputStream generatePdf(Retention retention, Provider provider) {
 
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            PdfPTable table = new PdfPTable(3);
-
-            table.setWidthPercentage(100);
-            table.setWidths(new int[]{5, 5, 5});
-
-            Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-
-            PdfPCell hcell;
-            hcell = new PdfPCell(new Phrase("Fecha", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
-
-            hcell = new PdfPCell(new Phrase("Numero de factura", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
-
-
-            hcell = new PdfPCell(new Phrase("Base Imponible", headFont));
-            hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            table.addCell(hcell);
-
-
-            retention.getInvoice().forEach(i -> {
-                PdfPCell cell;
-
-                cell = new PdfPCell(new Phrase(i.getDate().toString()));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(i.getPointSale()+"-"+ i.getNumber()));
-                cell.setPaddingLeft(5);
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                table.addCell(cell);
-
-                cell = new PdfPCell(new Phrase(String.format("%.2f",i.getEngraved())));
-                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                cell.setPaddingRight(5);
-                table.addCell(cell);
-
-            });
-
             PdfWriter.getInstance(document, out);
             document.open();
 
@@ -71,17 +24,11 @@ public class RetentionPdf {
             document.add(fecha);
             document.add(Chunk.NEWLINE);
 
-            Paragraph number = new Paragraph("NUMERO :" + (retention.getId() - 8));
+            Paragraph number = new Paragraph("NUMERO :" + (retention.getNumber()));
             number.setAlignment(Element.ALIGN_RIGHT);
             document.add(number);
             document.add(Chunk.NEWLINE);
 
-            Paragraph title = new Paragraph("CONSTANCIA DE RETENCION SUFRIDA RESOLUCION GENERAL Nº01/2012-MP");
-            title.setAlignment(Element.ALIGN_CENTER);
-            title.add(Chunk.NEWLINE);
-            document.add(title);
-            document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
 
             Paragraph agenteRetention = new Paragraph("AGENTE DE RETENCION:");
             agenteRetention.add(Chunk.NEWLINE);
@@ -89,22 +36,32 @@ public class RetentionPdf {
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Cuit : " + retention.getCompany().getCuit() );
             agenteRetention.add(Chunk.NEWLINE);
-            agenteRetention.add("Habilitación : 839505/00" );
+
+            Paragraph title;
+            if(retention.getRetentionType().getId() == 1L){
+                 title = new Paragraph("CONSTANCIA DE RETENCION SUFRIDA RESOLUCION GENERAL Nº01/2012-MP");
+                 agenteRetention.add("Habilitación :" + retention.getCompany().getHabilitationMun());
+            }
+            else {
+                title = new Paragraph("CONSTANCIA DE RETENCION IIBB MISIONES");
+                agenteRetention.add("Habilitación :" + retention.getCompany().getHabilitationDgr());
+            }
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.add(Chunk.NEWLINE);
+            document.add(title);
+            document.add(Chunk.NEWLINE);
+            document.add(Chunk.NEWLINE);
+
             document.add(agenteRetention);
             document.add(Chunk.NEWLINE);
-
             document.add(Chunk.NEWLINE);
 
-            Paragraph provider = new Paragraph("AGENTE DE RETENIDO :");
-            provider.add(Chunk.NEWLINE);
-            provider.add("Razón Social : " + retention.getInvoice().get(0).getProvider().getCompanyName());
-            provider.add(Chunk.NEWLINE);
-            provider.add("Cuit : " + retention.getInvoice().get(0).getProvider().getCuit());
-            document.add(provider);
-            document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
-
-            document.add(table);
+            Paragraph providerAgent = new Paragraph("AGENTE DE RETENIDO :");
+            providerAgent.add(Chunk.NEWLINE);
+            providerAgent.add("Razón Social : " + provider.getCompanyName());
+            providerAgent.add(Chunk.NEWLINE);
+            providerAgent.add("Cuit : " + provider.getCuit());
+            document.add(providerAgent);
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
 
@@ -112,11 +69,11 @@ public class RetentionPdf {
             ret.add(Chunk.NEWLINE);
             ret.add("Descripción : " + retention.getRetentionType().getDescription());
             ret.add(Chunk.NEWLINE);
-            ret.add("Alicuota : " + retention.getRetentionType().getAliquot() );
+            ret.add("Alicuota : " + retention.getRetentionType().getAliquot());
             ret.add(Chunk.NEWLINE);
-            ret.add("Base imponible : " + String.format("%.2f", retention.calculateBase()) );
+            ret.add("Base imponible : " + String.format("%.2f", retention.getRetentionAmount() / retention.getRetentionType().getAliquot()));
             ret.add(Chunk.NEWLINE);
-            ret.add("Importe retenido: " + String.format("%.2f",retention.calculateRet()));
+            ret.add("Importe retenido: " + String.format("%.2f",retention.getRetentionAmount()));
             document.add(ret);
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
