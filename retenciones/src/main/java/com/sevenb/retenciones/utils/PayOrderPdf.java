@@ -116,9 +116,11 @@ public class PayOrderPdf {
             document.add(title);
             document.add(Chunk.NEWLINE);
             // Creating a Document object
+
             Image img = Image.getInstance("src/main/java/com/sevenb/retenciones/imag/27118538469.jpeg");
             img.setAlignment(Element.ALIGN_CENTER);
             img.scalePercent(25f, 25f);
+
 
             Paragraph agenteRetention = new Paragraph("FECHA EMISION: " + payOrder.getDate());
             agenteRetention.add(Chunk.NEWLINE);
@@ -149,11 +151,13 @@ public class PayOrderPdf {
             encabezado.setWidthPercentage(100);
             encabezado.setWidths(new int[]{10, 10});
 
+            // TODO images will be inserted when they are added to database
             PdfPCell imaCell;
             imaCell = new PdfPCell(img);
             imaCell.setPadding(2);
             imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             encabezado.addCell(imaCell);
+
 
             PdfPCell hcellInfo;
             hcellInfo = new PdfPCell(agenteRetention);
@@ -251,6 +255,7 @@ public class PayOrderPdf {
             return new ByteArrayInputStream(outputStream.toByteArray());
         } catch (Exception e) {
             throw new RuntimeException(e);
+
         }
     }
 }

@@ -22,6 +22,7 @@ public class Company {
     private Boolean municipalityRet = Boolean.FALSE;
     private byte[] imagen;
 
+
     public Company() {
         //No-args constructor
     }

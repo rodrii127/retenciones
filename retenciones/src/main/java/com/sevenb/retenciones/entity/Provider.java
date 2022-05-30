@@ -15,8 +15,10 @@ public class Provider {
     private String address;
     private String phone;
     private String fiscalCondition;
+
     @ManyToOne
     private Company company;
+
     public Provider() {
         //No-args constructor
     }
@@ -90,6 +92,7 @@ public class Provider {
     @Override
     public String toString() {
         return "{\"Provider\":{"
+
                 + "\"id\":\"" + id + "\""
                 + ", \"companyName\":\"" + companyName + "\""
                 + ", \"cuit\":\"" + cuit + "\""
@@ -99,3 +102,4 @@ public class Provider {
                 + ", \"company\":" + company
                 + "}}";
     }}
+
