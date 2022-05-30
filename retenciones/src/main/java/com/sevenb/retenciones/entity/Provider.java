@@ -23,13 +23,14 @@ public class Provider {
         //No-args constructor
     }
 
-    public Provider(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition) {
+    public Provider(Long id, String companyName, String cuit, String address, String phone, String fiscalCondition, Company company) {
         this.id = id;
         this.companyName = companyName;
         this.cuit = cuit;
         this.address = address;
         this.phone = phone;
         this.fiscalCondition = fiscalCondition;
+        this.company = company;
     }
 
     public Long getId() {
@@ -91,13 +92,14 @@ public class Provider {
     @Override
     public String toString() {
         return "{\"Provider\":{"
-            + "\"id\":\"" + id + "\""
-            + ", \"companyName\":\"" + companyName + "\""
-            + ", \"cuit\":\"" + cuit + "\""
-            + ", \"address\":\"" + address + "\""
-            + ", \"phone\":\"" + phone + "\""
-            + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
-            + ", \"company\":" + company
-            + "}}";
-    }
-}
+
+                + "\"id\":\"" + id + "\""
+                + ", \"companyName\":\"" + companyName + "\""
+                + ", \"cuit\":\"" + cuit + "\""
+                + ", \"address\":\"" + address + "\""
+                + ", \"phone\":\"" + phone + "\""
+                + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
+                + ", \"company\":" + company
+                + "}}";
+    }}
+

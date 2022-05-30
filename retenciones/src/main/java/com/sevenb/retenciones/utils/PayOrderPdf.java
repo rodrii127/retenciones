@@ -3,13 +3,12 @@ package com.sevenb.retenciones.utils;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 
 
 import com.sevenb.retenciones.entity.Invoice;
 import com.sevenb.retenciones.entity.PayOrder;
+import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,30 +18,21 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class PayOrderPdf {
-
     private static final Logger logger = LoggerFactory.getLogger(PayOrderPdf.class);
 
     public ByteArrayInputStream generatePdfPayOrder(PayOrder payOrder) {
+
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        // insertar imagen en pfg
-        // TODO images will be inserted when they are added to database
-        /*FileInputStream fis = null;
-        File file = new File("/home/fernando/Downloads/farmacom.jpeg");
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }*/
 
         try {
             PdfPTable table = new PdfPTable(4);
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{5, 5, 5,5});
+            table.setWidths(new int[]{5, 5, 5, 5});
 
             Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
 
@@ -63,11 +53,8 @@ public class PayOrderPdf {
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
 
-            List<Retention> retentionList = payOrder.getRetentionList();
-            List<Invoice> invoiceList = retentionList.get(0).getInvoice();
-
             payOrder.getRetentionList().forEach(r -> {
-                r.getInvoice().forEach(i -> {
+                payOrder.getInvoice().forEach(i -> {
                     PdfPCell cell;
 
                     cell = new PdfPCell(new Phrase(i.getDate().toString()));
@@ -94,7 +81,6 @@ public class PayOrderPdf {
                     table.addCell(cell);
 
                 });
-
             });
 
             PdfPCell cellTotal;
@@ -121,21 +107,19 @@ public class PayOrderPdf {
             cellTotal.setPaddingRight(5);
             table.addCell(cellTotal);
 
-
-            PdfWriter.getInstance(document, out);
+            PdfWriter writer = PdfWriter.getInstance(document, out);
             document.open();
 
-            Paragraph title = new Paragraph("ORDEN DE PAGO NUMERO : " + payOrder.getId());
+            Paragraph title = new Paragraph("ORDEN DE PAGO NUMERO : " + payOrder.getPayOrderNumber());
             title.setAlignment(Element.ALIGN_CENTER);
             title.add(Chunk.NEWLINE);
             document.add(title);
             document.add(Chunk.NEWLINE);
             // Creating a Document object
 
-            //// TODO images will be inserted when they are added to database
-            /*Image img = Image.getInstance("/home/fernando/Downloads/farmacom.jpeg");
+            Image img = Image.getInstance("src/main/java/com/sevenb/retenciones/imag/27118538469.jpeg");
             img.setAlignment(Element.ALIGN_CENTER);
-            img.scalePercent(25f,25f);*/
+            img.scalePercent(25f, 25f);
 
 
             Paragraph agenteRetention = new Paragraph("FECHA EMISION: " + payOrder.getDate());
@@ -147,8 +131,6 @@ public class PayOrderPdf {
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Cuit : " + payOrder.getCompany().getCuit());
             agenteRetention.add(Chunk.NEWLINE);
-            agenteRetention.add("Habilitación : 839505/00");
-            agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Teléfono :" + payOrder.getCompany().getPhone());
             agenteRetention.setAlignment(Element.ALIGN_LEFT);
             agenteRetention.add(Chunk.NEWLINE);
@@ -156,7 +138,7 @@ public class PayOrderPdf {
 
             Paragraph provider = new Paragraph("AGENTE DE RETENIDO:");
             provider.add(Chunk.NEWLINE);
-            provider.add("Razón Social : "+payOrder.getProvider().getCompanyName());
+            provider.add("Razón Social : " + payOrder.getProvider().getCompanyName());
             provider.add(Chunk.NEWLINE);
             provider.add("Cuit : " + payOrder.getProvider().getCuit());
             provider.setAlignment(Element.ALIGN_LEFT);
@@ -165,17 +147,17 @@ public class PayOrderPdf {
             tableInfo.setWidthPercentage(100);
             tableInfo.setWidths(new int[]{10});
 
-
             PdfPTable encabezado = new PdfPTable(2);
             encabezado.setWidthPercentage(100);
             encabezado.setWidths(new int[]{10, 10});
 
             // TODO images will be inserted when they are added to database
-            /*PdfPCell imaCell;
+            PdfPCell imaCell;
             imaCell = new PdfPCell(img);
             imaCell.setPadding(2);
-            imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);*/
-            /*encabezado.addCell(imaCell);*/
+            imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            encabezado.addCell(imaCell);
+
 
             PdfPCell hcellInfo;
             hcellInfo = new PdfPCell(agenteRetention);
@@ -193,8 +175,6 @@ public class PayOrderPdf {
             document.add(encabezado);
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
-
-
             document.add(table);
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
@@ -203,12 +183,19 @@ public class PayOrderPdf {
             ret.add(Chunk.NEWLINE);
             ret.add("Base imponible : " + String.format("%.2f", payOrder.calculateBase()));
             ret.add(Chunk.NEWLINE);
-            ret.add("Retención municipal (0.007%) : " + String.format("%.2f", payOrder.calculateMunicipality()));
-            ret.add(Chunk.NEWLINE);
+            payOrder.getRetentionList().forEach(r -> {
+                if (r.getRetentionType().getId() == 1L) {
+                    ret.add("Retención municipal (0.007%) : " + String.format("%.2f", r.getRetentionAmount()));
+                    ret.add(Chunk.NEWLINE);
+                }
+                if (r.getRetentionType().getId() == 2L) {
+                    ret.add("Retención IIBB Misiones (0.0331%) : " + String.format("%.2f", r.getRetentionAmount()));
+                    ret.add(Chunk.NEWLINE);
+                }
+            });
             document.add(ret);
             document.add(Chunk.NEWLINE);
-            Paragraph pay = new Paragraph("MONTO DEl CHEQUE O TRANSFERENCIA : " + String.format("%.2f",payOrder.calculateTotal() - payOrder.calculateMunicipality()));
-            pay.add(Chunk.NEWLINE);
+            Paragraph pay = new Paragraph("MONTO DEl CHEQUE O TRANSFERENCIA : " + String.format("%.2f", payOrder.calculateTotal() - payOrder.calculateMunicipality()));
             pay.add(Chunk.NEWLINE);
             document.add(pay);
 
@@ -223,21 +210,52 @@ public class PayOrderPdf {
             payMode.add(Chunk.NEWLINE);
             document.add(payMode);
             document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
-            document.add(Chunk.NEWLINE);
 
             Paragraph firma = new Paragraph("-------------------------------");
             firma.add(Chunk.NEWLINE);
             firma.add("FIRMA Y SELLO");
             firma.setAlignment(Element.ALIGN_CENTER);
             document.add(firma);
-
-
-            document.close();document.add(Chunk.NEWLINE);
-
-        } catch (DocumentException /*| IOException*/ ex) {
+            document.add(Chunk.NEXTPAGE);
+            document.close();
+            return mergePdf(payOrder.getRetentionList(),payOrder.getProvider(),out);
+        } catch (DocumentException | IOException /*| IOException*/ ex) {
             logger.error("Error occurred: {0}", ex);
+            throw new RuntimeException(ex);
         }
-        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+
+//Une el PDF de pay order y las retencions
+    public ByteArrayInputStream mergePdf(List<Retention> retentionLis, Provider provider, ByteArrayOutputStream outputStreamPayOrder) {
+        try {
+            Document doc = new Document();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PdfWriter writer = PdfWriter.getInstance(doc, outputStream);
+            //Open document.
+            doc.open();
+            //Contain the pdf data.
+            PdfContentByte pageContentByte = writer.getDirectContent();
+            PdfReader pdfReader1 = new PdfReader(new ByteArrayInputStream(outputStreamPayOrder.toByteArray()));
+            PdfImportedPage pdfImportedPage = writer.getImportedPage(pdfReader1, 1);
+            pageContentByte.addTemplate(pdfImportedPage, 0, 0);
+            retentionLis.forEach(r -> {
+                doc.newPage();
+                ByteArrayInputStream byteArrayInputStream = new RetentionPdf().generatePdf(r, provider);
+                PdfReader pdfReader = null;
+                try {
+                    pdfReader = new PdfReader(byteArrayInputStream);
+                    PdfImportedPage pdfImportedPage1 = writer.getImportedPage(pdfReader, 1);
+                    pageContentByte.addTemplate(pdfImportedPage1, 0, 0);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            doc.close();
+            return new ByteArrayInputStream(outputStream.toByteArray());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+
+        }
     }
 }

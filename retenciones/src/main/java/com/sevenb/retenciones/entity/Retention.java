@@ -6,32 +6,46 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "retention")
+@Table(name = "retention",uniqueConstraints = {@UniqueConstraint(columnNames =
+        {"number","retention_type_id","company_id"})})
 public class Retention {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private Long number;
     @Column(nullable = false)
     private LocalDate date;
     @ManyToOne(fetch = FetchType.EAGER)
     private RetentionType retentionType;
     @Column(nullable = false)
     private Double retentionAmount;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Invoice> invoice;
     @ManyToOne
     private Company company;
+
+    @ManyToOne
+    private Provider provider;
 
     public Retention() {
     }
 
-    public Retention(LocalDate date, RetentionType retentionType, Double retentionAmount, List<Invoice> invoice, Company company) {
+
+    public Retention(Long id, Long number, LocalDate date, RetentionType retentionType, Double retentionAmount, Company company, Provider provider) {
+        this.id = id;
+        this.number = number;
         this.date = date;
         this.retentionType = retentionType;
         this.retentionAmount = retentionAmount;
-        this.invoice = invoice;
         this.company = company;
+        this.provider = provider;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     public Long getId() {
@@ -40,6 +54,14 @@ public class Retention {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
     }
 
     public LocalDate getDate() {
@@ -66,30 +88,11 @@ public class Retention {
         this.retentionAmount = retentionAmount;
     }
 
-    public List<Invoice> getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(List<Invoice> invoice) {
-        this.invoice = invoice;
-    }
-
     public Company getCompany() {
         return company;
     }
 
     public void setCompany(Company company) {
         this.company = company;
-    }
-
-    public Double calculateBase(){
-        final Double[] base = {0D};
-        invoice.forEach(i -> {
-            base[0] = base[0] + i.getEngraved();});
-        return base[0];
-    }
-
-    public Double calculateRet(){
-         return calculateBase() * retentionType.getAliquot();
     }
 }

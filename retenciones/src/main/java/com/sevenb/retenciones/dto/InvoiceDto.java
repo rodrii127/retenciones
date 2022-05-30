@@ -20,12 +20,11 @@ public class InvoiceDto {
     private Double taxedOthers;
     private Double municipality;
     private Boolean impacted;
-    private Long company;
 
     public InvoiceDto() {
     }
 
-    public InvoiceDto(Long id, Integer pointSale, Long number, Long provider, LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted, Long company) {
+    public InvoiceDto(Long id, Integer pointSale, Long number, Long provider, LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted) {
         this.id = id;
         this.pointSale = pointSale;
         this.number = number;
@@ -39,7 +38,7 @@ public class InvoiceDto {
         this.taxedOthers = taxedOthers;
         this.municipality = municipality;
         this.impacted = impacted;
-        this.company = company;
+
     }
 
     public Long getId() {
@@ -146,11 +145,4 @@ public class InvoiceDto {
         this.impacted = impacted;
     }
 
-    public Long getCompany() {
-        return company;
-    }
-
-    public void setCompany(Long company) {
-        this.company = company;
-    }
 }

@@ -4,15 +4,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PayOrderInputDto {
-    List<Long> idPayOder ;
+    List<Long> idInvoices ;
     LocalDate startDate;
 
-    public List<Long> getIdPayOder() {
-        return idPayOder;
+
+    public List<Long> getIdInvoices() {
+        return idInvoices;
     }
 
-    public void setIdPayOder(List<Long> idPayOder) {
-        this.idPayOder = idPayOder;
+    public void setIdInvoices(List<Long> idInvoices) {
+        this.idInvoices = idInvoices;
     }
 
     public LocalDate getStartDate() {
@@ -23,8 +24,8 @@ public class PayOrderInputDto {
         this.startDate = startDate;
     }
 
-    public PayOrderInputDto(List<Long> idPayOder, LocalDate startDate) {
-        this.idPayOder = idPayOder;
+    public PayOrderInputDto(List<Long> idInvoices, LocalDate startDate) {
+        this.idInvoices = idInvoices;
         this.startDate = startDate;
     }
 

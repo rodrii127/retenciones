@@ -12,29 +12,36 @@ public class PayOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String payOrderNumber;
     private LocalDate date;
     @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Retention> retentionList;
-    private String payOrderNumber;
+
     private String payMode;
-     private String payModeNumber;
-    @ManyToOne(fetch = FetchType.EAGER)
+    private String payModeNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Invoice> invoice;
 
     public PayOrder() {
     }
 
-    public PayOrder(Long id,LocalDate date, Provider provider, String payOrderNumber, String payMode, String payModeNumber, Company company, List<Retention> retentionList) {
+
+
+
+    public PayOrder(Long id,  LocalDate date, Provider provider, List<Retention> retentionList, String payOrderNumber, String payMode, String payModeNumber, Company company, List<Invoice> invoice) {
         this.id = id;
         this.date = date;
         this.provider = provider;
+        this.retentionList = retentionList;
         this.payOrderNumber = payOrderNumber;
         this.payMode = payMode;
         this.payModeNumber = payModeNumber;
-       this.company = company;
-       this.retentionList = retentionList;
+        this.company = company;
+        this.invoice = invoice;
     }
 
     public Long getId() {
@@ -101,38 +108,32 @@ public class PayOrder {
         this.retentionList = retentionList;
     }
 
-    public Double calculateMunicipality(){
-       final Double[] base = {0D};
-        retentionList.forEach(i -> {
-            if(i.getRetentionType().getId() == 1L)
-                base[0] = base[0] + i.calculateRet();
-        });
-        return base[0];
+    public List<Invoice> getInvoice() {
+        return invoice;
     }
 
+    public void setInvoice(List<Invoice> invoice) {
+        this.invoice = invoice;
+    }
+
+    public Double calculateMunicipality(){
+                return (calculateBase() * 0.007);
+    }
     public Double calculateIibb(){
-        final Double[] base = {0D};
-        retentionList.forEach(i -> {
-            if(i.getRetentionType().getId()==2L)
-                base[0] = base[0] + i.calculateRet();
-        });
-        return base[0];
+        return (calculateBase() * 0.0331);
     }
     public Double calculateBase(){
         final Double[] base = {0D};
-        retentionList.forEach(i -> {
-              base[0] = base[0] + i.calculateBase();
+        invoice.forEach(i -> {
+              base[0] = base[0] + i.getEngraved();
         });
         return base[0];
     }
-
     public Double calculateTotal(){
         final Double[] base = {0D};
-        retentionList.forEach(i -> {
-            i.getInvoice().forEach(invoice -> {
+        invoice.forEach(invoice -> {
                 base[0] = base[0] + invoice.calculateTotal();
             });
-        });
         return base[0];
     }
 
