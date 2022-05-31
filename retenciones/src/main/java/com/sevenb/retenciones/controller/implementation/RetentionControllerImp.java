@@ -1,28 +1,24 @@
 package com.sevenb.retenciones.controller.implementation;
 
-import com.sevenb.retenciones.controller.definition.RetentionController;
-import com.sevenb.retenciones.dto.RetentionInputDto;
-import com.sevenb.retenciones.entity.SearchDate;
-import com.sevenb.retenciones.security.JWTAuthenticationToken;
-import com.sevenb.retenciones.security.JWTValidator;
-import com.sevenb.retenciones.security.entity.JWTUser;
-import com.sevenb.retenciones.service.definition.RetentionService;
+import java.io.File;
+import java.io.FileInputStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.sevenb.retenciones.controller.definition.RetentionController;
+import com.sevenb.retenciones.dto.RetentionInputDto;
+import com.sevenb.retenciones.entity.SearchDate;
+import com.sevenb.retenciones.security.JWTValidator;
+import com.sevenb.retenciones.service.definition.RetentionService;
 
 @RestController
 @RequestMapping(value = "/retentions", produces = "application/json")
@@ -40,7 +36,7 @@ public class RetentionControllerImp implements RetentionController {
     @Override
     @PostMapping
     public ResponseEntity<?> createRetention(@RequestBody RetentionInputDto inputDto) {
-         return null;//retentionService.saveRetention(inputDto);
+        return null;//retentionService.saveRetention(inputDto);
     }
 
     @Override
@@ -53,8 +49,8 @@ public class RetentionControllerImp implements RetentionController {
         return null;
     }
 
-   @Override
-   @GetMapping(value = "/retentionPdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Override
+    @GetMapping(value = "/retentionPdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<?> retentionPdf(@PathVariable Long id) {
     /*    ByteArrayInputStream bis = retentionService.retentionPdf(id);
         var headers = new HttpHeaders();
@@ -78,9 +74,9 @@ public class RetentionControllerImp implements RetentionController {
         headers.add("Expires", "0");
 
         return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
     }
 }

@@ -30,8 +30,5 @@ public interface PayOrderController {
     ResponseEntity<?> createPayOrder(PayOrderInputDto payOrderInputDto);
 
     @Parameter(name = "id", description = "The pay order id", required = true)
-    ResponseEntity<?> findOnePayOrder(Long id);
-
-    @Parameter(name = "id", description = "The pay order id", required = true)
     ResponseEntity<?> payOrderPdf(Long id);
 }

@@ -35,7 +35,6 @@ public class UserControllerImp {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid User user) {
-
         return userService.login(user);
     }
 
