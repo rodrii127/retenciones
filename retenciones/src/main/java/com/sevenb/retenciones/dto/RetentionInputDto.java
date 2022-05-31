@@ -8,7 +8,6 @@ import java.util.List;
 public class RetentionInputDto {
      List<Long> idIvoices;
      LocalDate startDate;
-
      Long idRetentionType;
 
      public List<Long> getIdIvoices() {

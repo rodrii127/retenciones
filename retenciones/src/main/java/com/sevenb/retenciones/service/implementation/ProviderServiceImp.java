@@ -13,10 +13,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.sevenb.retenciones.config.exception.NotFoundException;
+import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Provider;
+import com.sevenb.retenciones.repository.CompanyRepository;
 import com.sevenb.retenciones.repository.ProviderRepository;
+import com.sevenb.retenciones.repository.UserRepository;
 import com.sevenb.retenciones.service.definition.ProviderService;
 
 /**
@@ -28,17 +32,22 @@ public class ProviderServiceImp implements ProviderService {
     private static final Logger LOG = LoggerFactory.getLogger(ProviderServiceImp.class);
 
     private final ProviderRepository providerRepository;
+    private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProviderServiceImp(ProviderRepository providerRepository) {
-
+    public ProviderServiceImp(ProviderRepository providerRepository, CompanyRepository companyRepository,
+                              UserRepository userRepository) {
         this.providerRepository = providerRepository;
+        this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public ResponseEntity<?> saveProvider(Provider provider) {
         Optional<Provider> providerByCompany = providerRepository.findByCompanyName(provider.getCompanyName());
         Optional<Provider> providerByCuit = providerRepository.findByCuit(provider.getCuit());
+        provider.setCompany(getCompanyByToken());
         if (providerByCompany.isEmpty() && providerByCuit.isEmpty()) {
             return new ResponseEntity<>(providerRepository.save(provider), HttpStatus.CREATED);
         }
@@ -48,11 +57,13 @@ public class ProviderServiceImp implements ProviderService {
 
     @Override
     public ResponseEntity<?> findAll() {
-        List<Provider> providers = providerRepository.findAll();
+        Company company = getCompanyByToken();
+        List<Provider> providers = providerRepository.findByCompany(company).orElse(null);
+
         if (CollectionUtils.isNotEmpty(providers)) {
             return new ResponseEntity<>(providers, HttpStatus.OK);
         }
-        throw new NotFoundException("user-service.user.not-found");
+        throw new NotFoundException("provider-service.provider.not-found");
     }
 
     @Override
@@ -87,5 +98,10 @@ public class ProviderServiceImp implements ProviderService {
         } catch (Exception e) {
             throw new NotFoundException("provider-service.provider.not-found");
         }
+    }
+
+    private Company getCompanyByToken() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return companyRepository.findById(userRepository.findByUsername(username).getIdUser()).orElseGet(Company::new);
     }
 }
