@@ -36,7 +36,7 @@ public class JWTUtils {
         res.addHeader(JWTConstants.AUTHORIZATION_HEADER, JWTConstants.BEARER_TOKEN + token);
     }
 
-    protected static Authentication getAuthentication(HttpServletRequest request, String[] roles) throws IOException {
+    protected static Authentication getAuthentication(HttpServletRequest request, String[] roles) {
         String token = request.getHeader(JWTConstants.AUTHORIZATION_HEADER);
         if (Objects.nonNull(token)) {
             try {
