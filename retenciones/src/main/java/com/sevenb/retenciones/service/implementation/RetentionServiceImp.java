@@ -2,13 +2,11 @@ package com.sevenb.retenciones.service.implementation;
 
 import com.sevenb.retenciones.config.exception.NotFoundException;
 import com.sevenb.retenciones.dto.RetentionInputDto;
-import com.sevenb.retenciones.entity.Company;
-import com.sevenb.retenciones.entity.Invoice;
-import com.sevenb.retenciones.entity.Retention;
-import com.sevenb.retenciones.entity.SearchDate;
+import com.sevenb.retenciones.entity.*;
 import com.sevenb.retenciones.repository.*;
 import com.sevenb.retenciones.security.JWTValidator;
 import com.sevenb.retenciones.security.entity.JWTUser;
+import com.sevenb.retenciones.security.entity.JWTUserDetails;
 import com.sevenb.retenciones.service.definition.RetentionService;
 
 import com.sevenb.retenciones.utils.MunicipalityCsvUtil;
@@ -24,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,25 +49,15 @@ public class RetentionServiceImp implements RetentionService {
         this.companyRepository = companyRepository;
         this.retentionTypeRepository = retentionTypeRepository;
         this.userRepository = userRepository;
-
         this.jwtValidator = jwtValidator;
     }
 
-
-   /* @Override
-    public ResponseEntity<?> saveRetention(RetentionInputDto inputDto) {
-   /*   username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Retention retention = new Retention();
-        Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
-        retention.setDate(inputDto.getStartDate());
-        retention.setRetentionType(retentionTypeRepository.findById(inputDto.getIdRetentionType()).get());
-
-        return new ResponseEntity<>(retentionRepository.save(retention), HttpStatus.CREATED);
-    }*/
-
     @Override
-    public ResponseEntity<?> findAll() {
-        List<Retention> retentions = retentionRepository.findAll();
+    public ResponseEntity<?> findAll(LocalDate startDate , LocalDate endDate, Long idRetentiontype) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
+        RetentionType retentionType = retentionTypeRepository.findById(idRetentiontype).get();
+        List<Retention> retentions = retentionRepository.findByDateBetweenAndCompanyAndRetentionType(startDate,endDate,company,retentionType);
         if (CollectionUtils.isNotEmpty(retentions)) {
             return new ResponseEntity<>(retentions, HttpStatus.OK);
         }
@@ -84,20 +73,12 @@ public class RetentionServiceImp implements RetentionService {
         throw new NotFoundException("retention-service.retention.not-found");
     }
 
-  /*  @Override
-    public ByteArrayInputStream retentionPdf(Long id){
-        Optional<Retention> retention = retentionRepository.findById(id);
-        RetentionPdf retentionPdf = new RetentionPdf();
-        if(retention.isPresent())
-          return retentionPdf.generatePdf(retention.get());
-        throw new NotFoundException("retentionPdf-service.retention.not-found");
-    }
-*/
     @Override
-    public File generaFileMunicipality(SearchDate searchDate) throws Exception {
+    public File generaFileMunicipality(LocalDate startDate, LocalDate endDate, Long idRetentionType) throws Exception {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
-        List<Retention> retentionList = retentionRepository.findByDateBetweenAndCompany(searchDate.getStartDate(),searchDate.getEndDate(),company);
+        RetentionType retentionType = retentionTypeRepository.findById(idRetentionType).get();
+        List<Retention> retentionList = retentionRepository.findByDateBetweenAndCompanyAndRetentionType(startDate,endDate ,company, retentionType);
         MunicipalityCsvUtil municipalityCsvUtil = new MunicipalityCsvUtil();
         return municipalityCsvUtil.generaFileMunicipality(retentionList, company);
     }
