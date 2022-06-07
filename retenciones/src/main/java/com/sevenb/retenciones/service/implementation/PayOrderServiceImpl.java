@@ -64,7 +64,6 @@ public class PayOrderServiceImpl implements PayOrderService {
         payOrder.setDate(startDate);
         payOrder.setPayModeNumber("");
         payOrder.setProvider(invoiceList.get(0).getProvider());
-
         Long number =payOrderRepository.findMaxPayOrder(company);
         if(number != null){
             payOrder.setPayOrderNumber(String.valueOf(number + 1));
@@ -79,6 +78,7 @@ public class PayOrderServiceImpl implements PayOrderService {
         retention.setRetentionAmount(amount);
         retention.setDate(startDate);
         retention.setRetentionType(retentionTypeRepository.findById(idRetention).get());
+        retention.setProvider(provider);
         Long number =retentionRepository.findMaxRetention(company,retention.getRetentionType());
         if(number != null){
             retention.setNumber(number +1);
