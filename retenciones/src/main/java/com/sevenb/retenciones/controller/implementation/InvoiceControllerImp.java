@@ -21,7 +21,7 @@ import com.sevenb.retenciones.service.definition.InvoiceService;
 
 @RestController
 @RequestMapping(value = "/invoice", produces = "application/json")
-class InvoiceController {
+class InvoiceControllerImp {
 
     @Autowired
     private InvoiceService invoiceService;

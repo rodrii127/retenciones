@@ -21,6 +21,6 @@ public interface RetentionRepositoy extends JpaRepository<Retention,Long> {
     @Query("select MAX(r.id) from Retention r where r.company = :companyId and r.retentionType = :idRetentionType")
             Long findMaxRetention(@Param("companyId") Company companyId , @Param("idRetentionType") RetentionType idRetentionType);
 
-    List<Retention> findByDateBetweenAndCompany(LocalDate starDate, LocalDate endDate, Company company);
+    List<Retention> findByDateBetweenAndCompanyAndRetentionType(LocalDate starDate, LocalDate endDate, Company company, RetentionType retention);
 
 }
