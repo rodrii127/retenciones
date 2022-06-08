@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -26,14 +27,16 @@ public class JWTFilter extends GenericFilterBean {
         throws IOException, ServletException {
 
         String[] roles = {JWTConstants.DEFAULT_ROLE};
+        HttpServletResponse httpResponse =(HttpServletResponse) response;
 
         try {
             Authentication authentication = JWTUtils.getAuthentication((HttpServletRequest) request, roles);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, httpResponse);
         } catch (UnauthorizedException exception) {
-            response.setContentType("application/json");
-            response.getWriter().write(new ApiError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), exception.getMessage()).toString());
+            httpResponse.setContentType("application/json");
+            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResponse.getWriter().write(new ApiError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), exception.getMessage()).toString());
         }
     }
 }
