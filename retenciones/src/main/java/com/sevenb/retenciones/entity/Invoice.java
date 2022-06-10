@@ -13,7 +13,7 @@ public class Invoice  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "point_sale",nullable = false)
     private Integer pointSale;
     @Column(nullable = false)
     private Long number;
@@ -21,7 +21,7 @@ public class Invoice  {
     private Provider provider;
     @Column(nullable = false)
     private LocalDate date;
-    @Column(nullable = false)
+
     private Double engraved;
     private Double exempt;
     private Double iva105;
