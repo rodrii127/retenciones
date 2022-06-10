@@ -6,7 +6,8 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "invoice")
+@Table(name = "invoice",uniqueConstraints = {@UniqueConstraint(columnNames =
+        {"pointSale","number","provider_id","company_id"})})
 public class Invoice  {
 
     @Id

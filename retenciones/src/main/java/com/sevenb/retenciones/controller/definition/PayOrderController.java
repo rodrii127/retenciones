@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.controller.definition;
 
 import com.sevenb.retenciones.dto.PayOrderInputDto;
+import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Provider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,4 +32,9 @@ public interface PayOrderController {
 
     @Parameter(name = "id", description = "The pay order id", required = true)
     ResponseEntity<?> payOrderPdf(Long id);
+
+    @Parameter(name = "startDate", description = "Start date", required = true)
+    @Parameter(name = "endDate", description = "End date", required = true)
+   ResponseEntity<?> findByDateBetween(String startDate , String endDate);
+
 }

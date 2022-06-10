@@ -31,7 +31,8 @@ class InvoiceControllerImp {
                                        @RequestParam(required = false) Boolean impacted,
                                        @RequestParam(required = false) Long idProvider) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return invoiceService.findByFilters(new SearchInvoiceInputDto(LocalDate.parse(startDate, formatter), LocalDate.parse(endDate, formatter), impacted, idProvider));
+        return invoiceService.findByFilters(new SearchInvoiceInputDto(LocalDate.parse(startDate,
+                formatter), LocalDate.parse(endDate, formatter), impacted, idProvider));
     }
 
     @GetMapping("/{id}")
