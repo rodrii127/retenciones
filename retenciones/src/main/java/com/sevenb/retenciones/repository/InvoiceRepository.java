@@ -18,6 +18,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByDateBetweenAndImpactedAndCompany(LocalDate starDate, LocalDate endDate,Boolean impacted, Company company);
     List<Invoice> findByDateBetweenAndProviderAndCompany(LocalDate starDate, LocalDate endDate, Provider provider,Company company);
     List<Invoice> findByDateBetweenAndCompany(LocalDate starDate, LocalDate endDate,Company company);
+    List<Invoice> findByPointSaleAndNumberAndProviderAndCompany(Integer pointSale, Long number, Provider provider, Company company);
 
     @Modifying
     @Query("update Invoice i set i.impacted = true where i.id = :id")

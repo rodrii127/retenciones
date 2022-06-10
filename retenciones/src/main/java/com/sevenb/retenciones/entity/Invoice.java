@@ -1,19 +1,23 @@
 package com.sevenb.retenciones.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "invoice",uniqueConstraints = {@UniqueConstraint(columnNames =
-        {"point_sale","number","provider_id","company_id"})})
-public class Invoice  {
+@Table(name = "invoice")
+public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "point_sale", nullable = false)
     private Integer pointSale;
     @Column(nullable = false)
     private Long number;
@@ -21,7 +25,7 @@ public class Invoice  {
     private Provider provider;
     @Column(nullable = false)
     private LocalDate date;
-    @Column(nullable = false)
+
     private Double engraved;
     private Double exempt;
     private Double iva105;
@@ -36,7 +40,7 @@ public class Invoice  {
     public Invoice() {
     }
 
-    public Invoice(Integer pointSale, Long number, Provider provider,LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted, Company company) {
+    public Invoice(Integer pointSale, Long number, Provider provider, LocalDate date, Double engraved, Double exempt, Double iva105, Double iva21, Double iibb, Double taxedOthers, Double municipality, Boolean impacted, Company company) {
 
         this.pointSale = pointSale;
         this.date = date;
@@ -161,12 +165,13 @@ public class Invoice  {
     public Company getCompany() {
         return company;
     }
+
     public void setCompany(Company company) {
         this.company = company;
     }
 
-    public Double calculateTotal(){
-        return engraved+exempt+iva105+iva21+iibb+taxedOthers+municipality;
+    public Double calculateTotal() {
+        return engraved + exempt + iva105 + iva21 + iibb + taxedOthers + municipality;
     }
 
 }
