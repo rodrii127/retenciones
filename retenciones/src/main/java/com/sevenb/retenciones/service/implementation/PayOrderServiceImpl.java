@@ -106,7 +106,17 @@ public class PayOrderServiceImpl implements PayOrderService {
         PayOrderPdf payOrderPdf = new PayOrderPdf();
         if(payOrder.isPresent())
             return payOrderPdf.generatePdfPayOrder(payOrder.get());
-        throw new NotFoundException("retentionPdf-service.retention.not-found");
+        throw new NotFoundException("payOrder-service.retention.not-found");
+    }
+
+    @Override
+    public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Company company = companyRepository.findById(userRepository.findByUsername(username).getIdUser()).get();
+        List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate,endDate,company);
+        if(payOrderList.isEmpty())
+            return new ResponseEntity<>(payOrderList, HttpStatus.CREATED);
+        throw new NotFoundException("PayOrder-service.retention.not-found");
     }
 
 }

@@ -125,7 +125,7 @@ public class PayOrder {
     public Double calculateBase(){
         final Double[] base = {0D};
         invoice.forEach(i -> {
-              base[0] = base[0] + i.getEngraved();
+              base[0] = base[0] + i.getEngraved() + i.getExempt();
         });
         return base[0];
     }
