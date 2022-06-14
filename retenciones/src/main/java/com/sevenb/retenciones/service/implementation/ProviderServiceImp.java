@@ -2,12 +2,10 @@ package com.sevenb.retenciones.service.implementation;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.EntityExistsException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.apache.commons.collections4.CollectionUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +43,11 @@ public class ProviderServiceImp implements ProviderService {
 
     @Override
     public ResponseEntity<?> saveProvider(Provider provider) {
-        Optional<Provider> providerByCompany = providerRepository.findByCompanyName(provider.getCompanyName());
-        Optional<Provider> providerByCuit = providerRepository.findByCuit(provider.getCuit());
-        provider.setCompany(getCompanyByToken());
-        if (providerByCompany.isEmpty() && providerByCuit.isEmpty()) {
+        Company company = getCompanyByToken();
+        Optional<Provider> duplicatedCompany = providerRepository.findByCompanyNameAndCuitAndCompany(provider.getCompanyName(),
+            provider.getCuit(), company);
+        provider.setCompany(company);
+        if (duplicatedCompany.isEmpty()) {
             return new ResponseEntity<>(providerRepository.save(provider), HttpStatus.CREATED);
         }
         LOG.error("Provider already exist by companyName or cuit.");
