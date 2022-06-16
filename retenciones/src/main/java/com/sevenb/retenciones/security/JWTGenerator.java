@@ -23,6 +23,7 @@ public class JWTGenerator {
             .setExpiration(new Date(System.currentTimeMillis() + JWTConstants.EXPIRATION_TIME));
         claims.put(JWTConstants.USER_ID, String.valueOf(jwtUser.getId()));
         claims.put(JWTConstants.ROLE, jwtUser.getRole());
+        claims.put(JWTConstants.COMPANY, jwtUser.getCompany());
 
         return Jwts.builder()
             .setClaims(claims)

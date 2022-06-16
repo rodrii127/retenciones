@@ -6,9 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * User entity.
@@ -30,6 +32,9 @@ public class User implements Serializable {
     @NotEmpty(message = "user.username.not-empty")
     @Column(unique = true, length = 150)
     private String username;
+
+    @OneToOne
+    private Company company;
 
     public User() {
         // No-arg constructor
@@ -65,12 +70,21 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     @Override
     public String toString() {
-        return "User{" +
-            "idUser=" + idUser +
-            ", password='" + password + '\'' +
-            ", username='" + username + '\'' +
-            '}';
+        return "{\"User\":{"
+            + "\"idUser\":\"" + idUser + "\""
+            + ", \"password\":\"" + password + "\""
+            + ", \"username\":\"" + username + "\""
+            + ", \"company\":" + company
+            + "}}";
     }
 }
