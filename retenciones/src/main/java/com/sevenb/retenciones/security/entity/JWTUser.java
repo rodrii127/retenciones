@@ -1,5 +1,7 @@
 package com.sevenb.retenciones.security.entity;
 
+import com.sevenb.retenciones.entity.Company;
+
 /**
  * JWT User. Sets user info for token generation
  */
@@ -8,6 +10,7 @@ public class JWTUser {
     private String username;
     private String role;
     private Long id;
+    private Company company;
 
     public JWTUser() {
         //No-args constructor
@@ -37,12 +40,21 @@ public class JWTUser {
         this.id = id;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     @Override
     public String toString() {
         return "{\"JWTUser\":{"
             + "\"username\":\"" + username + "\""
             + ", \"role\":\"" + role + "\""
             + ", \"id\":\"" + id + "\""
+            + ", \"company\":\"" + company + "\""
             + "}}";
     }
 }

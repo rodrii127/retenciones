@@ -56,7 +56,7 @@ public class RetentionPdf {
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
 
-            Paragraph providerAgent = new Paragraph("AGENTE DE RETENIDO :");
+            Paragraph providerAgent = new Paragraph("AGENTE RETENIDO :");
             providerAgent.add(Chunk.NEWLINE);
             providerAgent.add("Razón Social : " + provider.getCompanyName());
             providerAgent.add(Chunk.NEWLINE);

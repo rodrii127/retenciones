@@ -143,7 +143,7 @@ public class PayOrderPdf {
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add(Chunk.NEWLINE);
 
-            Paragraph provider = new Paragraph("AGENTE DE RETENIDO:");
+            Paragraph provider = new Paragraph("AGENTE RETENIDO:");
             provider.add(Chunk.NEWLINE);
             provider.add("Razón Social : " + payOrder.getProvider().getCompanyName());
             provider.add(Chunk.NEWLINE);

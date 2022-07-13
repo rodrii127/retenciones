@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.service.implementation;
 
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.EntityExistsException;
 
 import org.mapstruct.factory.Mappers;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.sevenb.retenciones.config.exception.NotFoundException;
 import com.sevenb.retenciones.dto.InvoiceDto;
 import com.sevenb.retenciones.dto.SearchInvoiceInputDto;
 import com.sevenb.retenciones.entity.Company;
@@ -63,19 +65,21 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice update(Invoice invoice, Long id) {
-        Invoice invoiceCurrent = findById(id);
-        invoiceCurrent.setNumber(invoice.getNumber());
-        invoiceCurrent.setPointSale(invoice.getPointSale());
-        invoiceCurrent.setProvider(invoice.getProvider());
-        invoiceCurrent.setEngraved(invoice.getEngraved());
-        invoiceCurrent.setExempt(invoice.getExempt());
-        invoiceCurrent.setIva105(invoice.getIva105());
-        invoiceCurrent.setIva21(invoice.getIva21());
-        invoiceCurrent.setIibb(invoice.getIibb());
-        invoiceCurrent.setTaxedOthers(invoice.getTaxedOthers());
-        invoiceCurrent.setMunicipality(invoice.getMunicipality());
-        invoiceCurrent.setImpacted(invoice.getImpacted());
-        return invoiceRepository.save(invoiceCurrent);
+        Invoice updateInvoice = findById(id);
+        if (Objects.isNull(updateInvoice))
+            throw new NotFoundException("invoice-service.invoice.not-found");
+        updateInvoice.setNumber(invoice.getNumber());
+        updateInvoice.setPointSale(invoice.getPointSale());
+        updateInvoice.setProvider(invoice.getProvider());
+        updateInvoice.setEngraved(invoice.getEngraved());
+        updateInvoice.setExempt(invoice.getExempt());
+        updateInvoice.setIva105(invoice.getIva105());
+        updateInvoice.setIva21(invoice.getIva21());
+        updateInvoice.setIibb(invoice.getIibb());
+        updateInvoice.setTaxedOthers(invoice.getTaxedOthers());
+        updateInvoice.setMunicipality(invoice.getMunicipality());
+        updateInvoice.setImpacted(invoice.getImpacted());
+        return invoiceRepository.save(updateInvoice);
     }
 
     @Override

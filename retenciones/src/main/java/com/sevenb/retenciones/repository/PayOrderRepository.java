@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface PayOrderRepository extends JpaRepository<PayOrder, Long> {
 
-    @Query("select MAX(r.payOrderNumber) from PayOrder r where r.company = :company")
+    @Query("select MAX(CAST(r.payOrderNumber as integer)) from PayOrder r where r.company = :company")
     Long findMaxPayOrder(@Param("company") Company company);
 
     List<PayOrder> findByDateBetweenAndCompany(LocalDate startDate , LocalDate endDate, Company company);

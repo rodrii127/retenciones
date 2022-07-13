@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.persistence.EntityExistsException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.apache.commons.collections4.CollectionUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +72,7 @@ public class UserServiceImp implements UserService {
                 jwtUser.setUsername(userDB.getUsername());
                 jwtUser.setId(userDB.getIdUser());
                 jwtUser.setRole(JWTConstants.DEFAULT_ROLE);
+                jwtUser.setCompany(userDB.getCompany());
                 Map<String, String> loginToken = new HashMap<>();
                 loginToken.put("loginToken", jwtGenerator.generate(jwtUser));
                 return new ResponseEntity<Map>(loginToken, HttpStatus.CREATED);
