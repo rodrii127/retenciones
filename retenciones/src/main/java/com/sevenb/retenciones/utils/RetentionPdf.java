@@ -30,7 +30,7 @@ public class RetentionPdf {
             document.add(Chunk.NEWLINE);
 
 
-            Paragraph agenteRetention = new Paragraph("AGENTE DE RETENCION:");
+            Paragraph agenteRetention = new Paragraph("AGENTE RETENIDO:");
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Razón Social : " + retention.getCompany().getCompanyName());
             agenteRetention.add(Chunk.NEWLINE);
