@@ -30,7 +30,7 @@ public class RetentionPdf {
             document.add(Chunk.NEWLINE);
 
 
-            Paragraph agenteRetention = new Paragraph("AGENTE RETENIDO:");
+            Paragraph agenteRetention = new Paragraph("AGENTE DE RETENCION:");
             agenteRetention.add(Chunk.NEWLINE);
             agenteRetention.add("Razón Social : " + retention.getCompany().getCompanyName());
             agenteRetention.add(Chunk.NEWLINE);
@@ -56,7 +56,7 @@ public class RetentionPdf {
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
 
-            Paragraph providerAgent = new Paragraph("AGENTE DE RETENCIÓN :");
+            Paragraph providerAgent = new Paragraph("AGENTE RETENIDO :");
             providerAgent.add(Chunk.NEWLINE);
             providerAgent.add("Razón Social : " + provider.getCompanyName());
             providerAgent.add(Chunk.NEWLINE);
