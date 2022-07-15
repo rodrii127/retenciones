@@ -125,9 +125,6 @@ public class PayOrderPdf {
             document.add(Chunk.NEWLINE);
             // Creating a Document object
 
-            /*Image img = Image.getInstance("src/main/java/com/sevenb/retenciones/imag/27118538469.jpeg");
-            img.setAlignment(Element.ALIGN_CENTER);
-            img.scalePercent(25f, 25f);*/
             Font f = new Font(Font.FontFamily.TIMES_ROMAN, 25.0f, Font.BOLD, BaseColor.BLACK);
             Chunk c = new Chunk(payOrder.getCompany().getFantasyName(), f);
             Paragraph fantasyName = new Paragraph(c);
