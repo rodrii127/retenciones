@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -124,10 +125,12 @@ public class PayOrderPdf {
             document.add(Chunk.NEWLINE);
             // Creating a Document object
 
-            Image img = Image.getInstance("src/main/java/com/sevenb/retenciones/imag/27118538469.jpeg");
+            /*Image img = Image.getInstance("src/main/java/com/sevenb/retenciones/imag/27118538469.jpeg");
             img.setAlignment(Element.ALIGN_CENTER);
-            img.scalePercent(25f, 25f);
-
+            img.scalePercent(25f, 25f);*/
+            Font f = new Font(Font.FontFamily.TIMES_ROMAN, 25.0f, Font.BOLD, BaseColor.BLACK);
+            Chunk c = new Chunk(payOrder.getCompany().getFantasyName(), f);
+            Paragraph fantasyName = new Paragraph(c);
 
             Paragraph agenteRetention = new Paragraph("FECHA EMISION: " + payOrder.getDate());
             agenteRetention.add(Chunk.NEWLINE);
@@ -160,8 +163,9 @@ public class PayOrderPdf {
 
             // TODO images will be inserted when they are added to database
             PdfPCell imaCell;
-            imaCell = new PdfPCell(img);
+            imaCell = new PdfPCell(fantasyName);
             imaCell.setPadding(2);
+            imaCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             imaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
             encabezado.addCell(imaCell);
 
@@ -226,7 +230,7 @@ public class PayOrderPdf {
             document.add(Chunk.NEXTPAGE);
             document.close();
             return mergePdf(payOrder.getRetentionList(),payOrder.getProvider(),out);
-        } catch (DocumentException | IOException /*| IOException*/ ex) {
+        } catch (DocumentException ex) {
             logger.error("Error occurred: {0}", ex);
             throw new RuntimeException(ex);
         }
