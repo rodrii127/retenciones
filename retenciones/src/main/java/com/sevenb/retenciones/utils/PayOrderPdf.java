@@ -75,7 +75,7 @@ public class PayOrderPdf {
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     table.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase(String.format("%.2f", i.getEngraved())));
+                    cell = new PdfPCell(new Phrase(String.format("%.2f", i.getEngraved()+i.getExempt())));
                     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     cell.setPaddingRight(5);
