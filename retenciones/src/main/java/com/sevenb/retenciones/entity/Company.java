@@ -1,7 +1,10 @@
 package com.sevenb.retenciones.entity;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "company")
@@ -20,8 +23,7 @@ public class Company {
     private String habilitationDgr;
     private Boolean iibb = Boolean.FALSE;
     private Boolean municipalityRet = Boolean.FALSE;
-    private byte[] imagen;
-
+    private String fantasyName;
 
     public Company() {
         //No-args constructor
@@ -124,28 +126,29 @@ public class Company {
         this.municipalityRet = municipalityRet;
     }
 
-    public byte[] getImagen() {
-        return imagen;
+    public String getFantasyName() {
+        return fantasyName;
     }
 
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
+    public void setFantasyName(String fantasyName) {
+        this.fantasyName = fantasyName;
     }
 
     @Override
     public String toString() {
         return "{\"Company\":{"
-                + "\"id\":\"" + id + "\""
-                + ", \"companyName\":\"" + companyName + "\""
-                + ", \"cuit\":\"" + cuit + "\""
-                + ", \"address\":\"" + address + "\""
-                + ", \"phone\":\"" + phone + "\""
-                + ", \"email\":\"" + email + "\""
-                + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
-                + ", \"habilitationMun\":\"" + habilitationMun + "\""
-                + ", \"habilitationDgr\":\"" + habilitationDgr + "\""
-                + ", \"iibb\":\"" + iibb + "\""
-                + ", \"municipalityRet\":\"" + municipalityRet + "\""
-                + "}}";
+            + "\"id\":\"" + id + "\""
+            + ", \"companyName\":\"" + companyName + "\""
+            + ", \"cuit\":\"" + cuit + "\""
+            + ", \"address\":\"" + address + "\""
+            + ", \"phone\":\"" + phone + "\""
+            + ", \"email\":\"" + email + "\""
+            + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
+            + ", \"habilitationMun\":\"" + habilitationMun + "\""
+            + ", \"habilitationDgr\":\"" + habilitationDgr + "\""
+            + ", \"iibb\":\"" + iibb + "\""
+            + ", \"municipalityRet\":\"" + municipalityRet + "\""
+            + ", \"fantasyName\":\"" + fantasyName + "\""
+            + "}}";
     }
 }

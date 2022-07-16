@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,10 +30,11 @@ class InvoiceControllerImp {
     @GetMapping
     public List<Invoice> findByFilters(@RequestParam String startDate, @RequestParam String endDate,
                                        @RequestParam(required = false) Boolean impacted,
-                                       @RequestParam(required = false) Long idProvider) {
+                                       @RequestParam(required = false) Long idProvider,
+                                       @RequestHeader("Authorization") String bearerToken) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return invoiceService.findByFilters(new SearchInvoiceInputDto(LocalDate.parse(startDate,
-                formatter), LocalDate.parse(endDate, formatter), impacted, idProvider));
+        return invoiceService.findByFilters(new SearchInvoiceInputDto(LocalDate.parse(startDate, formatter),
+            LocalDate.parse(endDate, formatter), impacted, idProvider), bearerToken);
     }
 
     @GetMapping("/{id}")
@@ -41,8 +43,8 @@ class InvoiceControllerImp {
     }
 
     @PostMapping(produces = "application/json")
-    public ResponseEntity<?> save(@RequestBody InvoiceDto invoiceDto) {
-        return invoiceService.save(invoiceDto);
+    public ResponseEntity<?> save(@RequestBody InvoiceDto invoiceDto, @RequestHeader("Authorization") String bearerToken) {
+        return invoiceService.save(invoiceDto, bearerToken);
     }
 
     @PutMapping

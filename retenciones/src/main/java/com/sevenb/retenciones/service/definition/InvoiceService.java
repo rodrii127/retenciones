@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 
 public interface InvoiceService {
-    ResponseEntity<?> save(InvoiceDto invoiceDto);
+    ResponseEntity<?> save(InvoiceDto invoiceDto, String bearerToken);
 
     List<Invoice> findAll();
 
@@ -19,6 +19,6 @@ public interface InvoiceService {
 
     Invoice update(Invoice invoice, Long id);
 
-    List<Invoice> findByFilters(SearchInvoiceInputDto inputDto);
+    List<Invoice> findByFilters(SearchInvoiceInputDto inputDto, String bearerToken);
 
 }

@@ -1,16 +1,13 @@
 package com.sevenb.retenciones.service.definition;
 
-import com.sevenb.retenciones.entity.Company;
-import com.sevenb.retenciones.entity.PayOrder;
-import com.sevenb.retenciones.entity.Provider;
-import org.springframework.http.ResponseEntity;
-
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 public interface PayOrderService {
-    public ResponseEntity<?> savePayOrder(List<Long> idRetentions, LocalDate startDate);
+    public ResponseEntity<?> savePayOrder(List<Long> idRetentions, LocalDate startDate, String bearerToken);
 
     public ResponseEntity<?> findAll();
 
@@ -18,8 +15,6 @@ public interface PayOrderService {
 
     public ByteArrayInputStream payOderPdf(Long id);
 
-    public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate);
-
-
+    public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken);
 
 }

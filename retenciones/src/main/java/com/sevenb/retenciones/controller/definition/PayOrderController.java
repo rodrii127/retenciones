@@ -26,15 +26,14 @@ public interface PayOrderController {
     @Parameters({
             @Parameter(name = "listRetentionId", description = "The pay order to be created", required = true),
             @Parameter(name = "startDate", description = "Date", required = true)
-
     })
-    ResponseEntity<?> createPayOrder(PayOrderInputDto payOrderInputDto);
+    ResponseEntity<?> createPayOrder(PayOrderInputDto payOrderInputDto, String bearerToken);
 
     @Parameter(name = "id", description = "The pay order id", required = true)
     ResponseEntity<?> payOrderPdf(Long id);
 
     @Parameter(name = "startDate", description = "Start date", required = true)
     @Parameter(name = "endDate", description = "End date", required = true)
-   ResponseEntity<?> findByDateBetween(String startDate , String endDate);
+   ResponseEntity<?> findByDateBetween(String startDate , String endDate, String bearerToken);
 
 }
