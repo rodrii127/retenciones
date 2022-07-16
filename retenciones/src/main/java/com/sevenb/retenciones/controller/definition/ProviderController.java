@@ -25,7 +25,7 @@ public interface ProviderController {
     @Parameters({
         @Parameter(name = "provider", description = "The provider to be created", required = true)
     })
-    ResponseEntity<?> createProvider(Provider provider);
+    ResponseEntity<?> createProvider(Provider provider, String bearerToken);
 
     @Operation(summary = "Get all providers")
     @ApiResponses(value = {
@@ -36,7 +36,7 @@ public interface ProviderController {
         @ApiResponse(responseCode = "500", description = "There was an error during the execution of the service"),
         @ApiResponse(responseCode = "503", description = "Service not available"),
     })
-    ResponseEntity<?> findAllProviders();
+    ResponseEntity<?> findAllProviders(String bearerToken);
 
     @Operation(summary = "Find a specific provider")
     @ApiResponses(value = {
