@@ -11,15 +11,15 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.sevenb.retenciones.config.exception.NotFoundException;
-import com.sevenb.retenciones.entity.Company;
+import com.sevenb.retenciones.dto.BearerTokenPayloadDto;
 import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.repository.CompanyRepository;
 import com.sevenb.retenciones.repository.ProviderRepository;
 import com.sevenb.retenciones.repository.UserRepository;
 import com.sevenb.retenciones.service.definition.ProviderService;
+import com.sevenb.retenciones.utils.JWTExtractionUtil;
 
 /**
  * ProviderService implementation. Defines how methods will access Providers database.
@@ -32,21 +32,23 @@ public class ProviderServiceImp implements ProviderService {
     private final ProviderRepository providerRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final JWTExtractionUtil jwtExtractionUtil;
 
     @Autowired
     public ProviderServiceImp(ProviderRepository providerRepository, CompanyRepository companyRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository, JWTExtractionUtil jwtExtractionUtil) {
         this.providerRepository = providerRepository;
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;
+        this.jwtExtractionUtil = jwtExtractionUtil;
     }
 
     @Override
-    public ResponseEntity<?> saveProvider(Provider provider) {
-        Company company = getCompanyByToken();
+    public ResponseEntity<?> saveProvider(Provider provider, String bearerToken) {
+        BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         Optional<Provider> duplicatedCompany = providerRepository.findByCompanyNameAndCuitAndCompany(provider.getCompanyName(),
-            provider.getCuit(), company);
-        provider.setCompany(company);
+            provider.getCuit(), bearerTokenPayloadDto.getCompany());
+        provider.setCompany(bearerTokenPayloadDto.getCompany());
         if (duplicatedCompany.isEmpty()) {
             return new ResponseEntity<>(providerRepository.save(provider), HttpStatus.CREATED);
         }
@@ -55,9 +57,9 @@ public class ProviderServiceImp implements ProviderService {
     }
 
     @Override
-    public ResponseEntity<?> findAll() {
-        Company company = getCompanyByToken();
-        List<Provider> providers = providerRepository.findByCompany(company).orElse(null);
+    public ResponseEntity<?> findAll(String bearerToken) {
+        BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
+        List<Provider> providers = providerRepository.findByCompany(bearerTokenPayloadDto.getCompany()).orElse(null);
 
         if (CollectionUtils.isNotEmpty(providers)) {
             return new ResponseEntity<>(providers, HttpStatus.OK);
@@ -97,10 +99,5 @@ public class ProviderServiceImp implements ProviderService {
         } catch (Exception e) {
             throw new NotFoundException("provider-service.provider.not-found");
         }
-    }
-
-    private Company getCompanyByToken() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return companyRepository.findById(userRepository.findByUsername(username).getIdUser()).orElseGet(Company::new);
     }
 }

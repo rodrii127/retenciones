@@ -8,9 +8,9 @@ import com.sevenb.retenciones.entity.Provider;
  */
 public interface ProviderService {
 
-    public ResponseEntity<?> saveProvider(Provider provider);
+    public ResponseEntity<?> saveProvider(Provider provider, String bearerToken);
 
-    public ResponseEntity<?> findAll();
+    public ResponseEntity<?> findAll(String bearerToken);
 
     public ResponseEntity<?> findOneProvider(Long id);
 
