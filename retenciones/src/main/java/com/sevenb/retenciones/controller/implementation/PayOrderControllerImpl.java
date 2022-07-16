@@ -29,8 +29,8 @@ public class PayOrderControllerImpl implements PayOrderController {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> createPayOrder(@RequestBody PayOrderInputDto payOrderInputDto) {
-        return payOrderService.savePayOrder(payOrderInputDto.getIdInvoices(), payOrderInputDto.getStartDate());
+    public ResponseEntity<?> createPayOrder(@RequestBody PayOrderInputDto payOrderInputDto, @RequestHeader("Authorization") String bearerToken) {
+        return payOrderService.savePayOrder(payOrderInputDto.getIdInvoices(), payOrderInputDto.getStartDate(), bearerToken);
     }
     @Override
     @GetMapping(value = "/payOrderPdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
@@ -46,10 +46,11 @@ public class PayOrderControllerImpl implements PayOrderController {
     }
     @Override
     @GetMapping
-    public ResponseEntity<?> findByDateBetween(@RequestParam String startDate, @RequestParam String endDate) {
+    public ResponseEntity<?> findByDateBetween(@RequestParam String startDate, @RequestParam String endDate,
+                                               @RequestHeader("Authorization") String bearerToken) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return payOrderService.findByDateBetween(LocalDate.parse(startDate,
-                formatter), LocalDate.parse(endDate, formatter));
+        return payOrderService.findByDateBetween(LocalDate.parse(startDate, formatter),
+            LocalDate.parse(endDate, formatter), bearerToken);
     }
 
 }

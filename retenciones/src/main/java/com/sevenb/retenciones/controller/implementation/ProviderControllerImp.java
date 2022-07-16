@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.sevenb.retenciones.controller.definition.ProviderController;
@@ -32,14 +33,14 @@ public class ProviderControllerImp implements ProviderController {
 
     @Override
     @PostMapping
-    public ResponseEntity<?> createProvider(@RequestBody @Valid Provider provider) {
-        return providerService.saveProvider(provider);
+    public ResponseEntity<?> createProvider(@RequestBody @Valid Provider provider, @RequestHeader("Authorization") String bearerToken) {
+        return providerService.saveProvider(provider, bearerToken);
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<?> findAllProviders() {
-        return providerService.findAll();
+    public ResponseEntity<?> findAllProviders(@RequestHeader("Authorization") String bearerToken) {
+        return providerService.findAll(bearerToken);
     }
 
     @Override
