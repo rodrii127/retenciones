@@ -13,6 +13,5 @@ import com.sevenb.retenciones.entity.Provider;
 public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     Optional<List<Provider>> findByCompany(Company company);
-
     Optional<Provider> findByCompanyNameAndCuitAndCompany(String companyName, String cuit, Company company);
 }

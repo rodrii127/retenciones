@@ -86,7 +86,7 @@ public class ProviderServiceImp implements ProviderService {
             provider.setCuit(providerNew.getCuit());
             provider.setPhone(providerNew.getPhone());
             provider.setFiscalCondition(providerNew.getFiscalCondition());
-            return new ResponseEntity<>(provider, HttpStatus.OK);
+            return new ResponseEntity<>(providerRepository.save(provider), HttpStatus.OK);
         }
         throw new NotFoundException("provider-service.provider.not-found");
     }

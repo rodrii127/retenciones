@@ -69,7 +69,8 @@ public class PayOrderServiceImpl implements PayOrderService {
         });
         payOrder.setInvoice(invoiceList);
         if (bearerTokenPayloadDto.getCompany().getIibb()) {
-            retentionList.add(saveRetention(payOrder.calculateIibb(), startDate, 2l, bearerTokenPayloadDto.getCompany(),
+            retentionList.add(saveRetention(payOrder.calculateIibb(), startDate,
+                    2l, bearerTokenPayloadDto.getCompany(),
                 invoiceList.get(NumberUtils.INTEGER_ZERO).getProvider()));
         }
         if (bearerTokenPayloadDto.getCompany().getMunicipalityRet()) {
@@ -108,17 +109,14 @@ public class PayOrderServiceImpl implements PayOrderService {
         retentionRepository.save(retention);
         return retention;
     }
-
     @Override
     public ResponseEntity<?> findAll() {
         return null;
     }
-
     @Override
     public ResponseEntity<?> findOnePayOrder(Long id) {
         return null;
     }
-
     @Override
     public ByteArrayInputStream payOderPdf(Long id) {
         Optional<PayOrder> payOrder = payOrderRepository.findById(id);
@@ -127,7 +125,6 @@ public class PayOrderServiceImpl implements PayOrderService {
             return payOrderPdf.generatePdfPayOrder(payOrder.get());
         throw new NotFoundException("payOrder-service.retention.not-found");
     }
-
     @Override
     public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
@@ -136,5 +133,4 @@ public class PayOrderServiceImpl implements PayOrderService {
             return new ResponseEntity<>(payOrderList, HttpStatus.CREATED);
         throw new NotFoundException("PayOrder-service.retention.not-found");
     }
-
 }
