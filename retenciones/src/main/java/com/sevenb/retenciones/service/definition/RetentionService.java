@@ -17,11 +17,8 @@ public interface RetentionService {
    //public ResponseEntity<?> saveRetention(RetentionInputDto inputDto);
 
     public ResponseEntity<?> findAll(LocalDate startDate , LocalDate endDate,Long id, String bearerToken);
-
     public ResponseEntity<?> findOneRetention(Long id);
-
     //public ByteArrayInputStream retentionPdf(Long id);
-
     public File generaFileMunicipality(LocalDate startDate, LocalDate endDate, Long idRetentionType, String bearerToken) throws Exception;
 
 }
