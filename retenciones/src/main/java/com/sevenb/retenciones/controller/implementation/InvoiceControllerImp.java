@@ -47,7 +47,7 @@ class InvoiceControllerImp {
         return invoiceService.save(invoiceDto, bearerToken);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public Invoice update(@RequestBody Invoice invoice, @PathVariable Long id) {
         return invoiceService.update(invoice, id);
     }
