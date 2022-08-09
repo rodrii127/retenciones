@@ -17,7 +17,7 @@ public interface InvoiceService {
 
     Invoice findById(Long id);
 
-    Invoice update(Invoice invoice, Long id);
+    Invoice update(InvoiceDto invoiceDto, Long id);
 
     List<Invoice> findByFilters(SearchInvoiceInputDto inputDto, String bearerToken);
 
