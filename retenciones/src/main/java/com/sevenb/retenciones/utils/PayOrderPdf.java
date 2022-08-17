@@ -15,7 +15,6 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfContentByte;
@@ -60,35 +59,32 @@ public class PayOrderPdf {
             hcell = new PdfPCell(new Phrase("Total", headFont));
             hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
             table.addCell(hcell);
+            payOrder.getInvoice().forEach(i -> {
+                PdfPCell cell;
 
-            payOrder.getRetentionList().forEach(r -> {
-                payOrder.getInvoice().forEach(i -> {
-                    PdfPCell cell;
+                cell = new PdfPCell(new Phrase(i.getDate().toString()));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase(i.getDate().toString()));
-                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    table.addCell(cell);
+                cell = new PdfPCell(new Phrase(i.getPointSale() + "-" + i.getNumber()));
+                cell.setPaddingLeft(5);
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                table.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase(i.getPointSale() + "-" + i.getNumber()));
-                    cell.setPaddingLeft(5);
-                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    table.addCell(cell);
+                cell = new PdfPCell(new Phrase(String.format("%.2f", i.getEngraved() + i.getExempt())));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPaddingRight(5);
+                table.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase(String.format("%.2f", i.getEngraved()+i.getExempt())));
-                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setPaddingRight(5);
-                    table.addCell(cell);
+                cell = new PdfPCell(new Phrase(String.format("%.2f", i.calculateTotal())));
+                cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setPaddingRight(5);
+                table.addCell(cell);
 
-                    cell = new PdfPCell(new Phrase(String.format("%.2f", i.calculateTotal())));
-                    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                    cell.setPaddingRight(5);
-                    table.addCell(cell);
-
-                });
             });
 
             PdfPCell cellTotal;
@@ -187,23 +183,19 @@ public class PayOrderPdf {
             document.add(Chunk.NEWLINE);
             document.add(Chunk.NEWLINE);
 
-            Paragraph ret = new Paragraph("RETENCION APLICADA:");
-            ret.add(Chunk.NEWLINE);
-            ret.add("Base imponible : " + String.format("%.2f", payOrder.calculateBase()));
-            ret.add(Chunk.NEWLINE);
-            payOrder.getRetentionList().forEach(r -> {
-                if (r.getRetentionType().getId() == 1L) {
-                    ret.add("Retención municipal (0.007%) : " + String.format("%.2f", r.getRetentionAmount()));
-                    ret.add(Chunk.NEWLINE);
-                }
-                if (r.getRetentionType().getId() == 2L) {
-                    ret.add("Retención IIBB Misiones (0.0331%) : " + String.format("%.2f", r.getRetentionAmount()));
-                    ret.add(Chunk.NEWLINE);
-                }
+            Paragraph retentionParagraph = new Paragraph("RETENCION APLICADA:");
+            retentionParagraph.add(Chunk.NEWLINE);
+            retentionParagraph.add("Base imponible : " + String.format("%.2f", payOrder.calculateBase()));
+            retentionParagraph.add(Chunk.NEWLINE);
+            payOrder.getRetentionList().forEach(retention -> {
+                retentionParagraph.add(retention.getRetentionType().getDescription()
+                    + String.format(" (%,.4f) : ", payOrder.getProvider().getAgreement() ? retention.getRetentionType().getReducedAliquot() : retention.getRetentionType().getAliquot())
+                    + String.format("%.2f", retention.getRetentionAmount()));
+                retentionParagraph.add(Chunk.NEWLINE);
             });
-            document.add(ret);
+            document.add(retentionParagraph);
             document.add(Chunk.NEWLINE);
-            Paragraph pay = new Paragraph("MONTO DEl CHEQUE O TRANSFERENCIA : " + String.format("%.2f", payOrder.calculateTotal() - payOrder.calculateMunicipality()));
+            Paragraph pay = new Paragraph("MONTO DEL CHEQUE O TRANSFERENCIA : " + String.format("%.2f", payOrder.calculateTotalWithRetentions()));
             pay.add(Chunk.NEWLINE);
             document.add(pay);
 
@@ -226,7 +218,7 @@ public class PayOrderPdf {
             document.add(firma);
             document.add(Chunk.NEXTPAGE);
             document.close();
-            return mergePdf(payOrder.getRetentionList(),payOrder.getProvider(),out);
+            return mergePdf(payOrder.getRetentionList(), payOrder.getProvider(), out);
         } catch (DocumentException ex) {
             logger.error("Error occurred: {0}", ex);
             throw new RuntimeException(ex);
@@ -234,7 +226,7 @@ public class PayOrderPdf {
     }
 
 
-//Une el PDF de pay order y las retencions
+    //Une el PDF de pay order y las retencions
     public ByteArrayInputStream mergePdf(List<Retention> retentionLis, Provider provider, ByteArrayOutputStream outputStreamPayOrder) {
         try {
             Document doc = new Document();

@@ -69,9 +69,9 @@ public class RetentionPdf {
             ret.add(Chunk.NEWLINE);
             ret.add("Descripción : " + retention.getRetentionType().getDescription());
             ret.add(Chunk.NEWLINE);
-            ret.add("Alicuota : " + retention.getRetentionType().getAliquot());
+            ret.add("Alicuota : " + (retention.getProvider().getAgreement() ?  retention.getRetentionType().getReducedAliquot() : retention.getRetentionType().getAliquot()));
             ret.add(Chunk.NEWLINE);
-            ret.add("Base imponible : " + String.format("%.2f", retention.getRetentionAmount() / retention.getRetentionType().getAliquot()));
+            ret.add("Base imponible : " + String.format("%.2f", retention.getRetentionAmount() / (retention.getProvider().getAgreement() ?  retention.getRetentionType().getReducedAliquot() : retention.getRetentionType().getAliquot())));
             ret.add(Chunk.NEWLINE);
             ret.add("Importe retenido: " + String.format("%.2f",retention.getRetentionAmount()));
             document.add(ret);

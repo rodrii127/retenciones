@@ -4,9 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import com.sevenb.retenciones.entity.Invoice;
 import com.sevenb.retenciones.entity.PayOrder;
 import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
+import com.sevenb.retenciones.entity.RetentionType;
 import com.sevenb.retenciones.repository.CompanyRepository;
 import com.sevenb.retenciones.repository.InvoiceRepository;
 import com.sevenb.retenciones.repository.PayOrderRepository;
@@ -68,16 +72,14 @@ public class PayOrderServiceImpl implements PayOrderService {
             invoiceRepository.updateImpactedTrue(i);
         });
         payOrder.setInvoice(invoiceList);
-        if (bearerTokenPayloadDto.getCompany().getIibb()) {
-            retentionList.add(saveRetention(payOrder.calculateIibb(), startDate, 2l, bearerTokenPayloadDto.getCompany(),
-                invoiceList.get(NumberUtils.INTEGER_ZERO).getProvider()));
+        Provider provider = invoiceList.get(NumberUtils.INTEGER_ZERO).getProvider();
+        if (bearerTokenPayloadDto.getCompany().getIibb() && BooleanUtils.isFalse(provider.getIibbExcept())) {
+            retentionList.add(saveRetention(payOrder.calculateBase(), startDate, 2L, bearerTokenPayloadDto.getCompany(), provider));
         }
-        if (bearerTokenPayloadDto.getCompany().getMunicipalityRet()) {
-            Double p = payOrder.calculateMunicipality();
-            retentionList.add(saveRetention(p, startDate, 1L, bearerTokenPayloadDto.getCompany(),
-                invoiceList.get(NumberUtils.INTEGER_ZERO).getProvider()));
+        if (bearerTokenPayloadDto.getCompany().getMunicipalityRet() && BooleanUtils.isFalse(provider.getMunicipalityExcept())) {
+            retentionList.add(saveRetention(payOrder.calculateBase(), startDate, 1L, bearerTokenPayloadDto.getCompany(), provider));
         }
-        payOrder.setRetentionList(retentionList);
+        payOrder.setRetentionList(retentionList.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         payOrder.setCompany(bearerTokenPayloadDto.getCompany());
         payOrder.setPayMode("EFECTIVO");
         payOrder.setDate(startDate);
@@ -92,31 +94,37 @@ public class PayOrderServiceImpl implements PayOrderService {
         return new ResponseEntity<>(payOrderRepository.save(payOrder), HttpStatus.CREATED);
     }
 
-    public Retention saveRetention(Double amount, LocalDate startDate, Long idRetention, Company company, Provider provider) {
-        Retention retention = new Retention();
-        retention.setRetentionAmount(amount);
-        retention.setDate(startDate);
-        retention.setRetentionType(retentionTypeRepository.findById(idRetention).get());
-        retention.setProvider(provider);
-        Long number = retentionRepository.findMaxRetention(company, retention.getRetentionType());
-        if (number != null) {
-            retention.setNumber(number + 1);
-        } else {
-            retention.setNumber(1L);
+    public Retention saveRetention(Double base, LocalDate startDate, Long idRetention, Company company, Provider provider) {
+        RetentionType retentionType = retentionTypeRepository.findById(idRetention).orElse(null);
+        Optional<Double> amount = Optional.ofNullable(retentionType)
+            .map(retentionTypeLambda -> provider.getAgreement() ? retentionTypeLambda.getReducedAliquot() : retentionTypeLambda.getAliquot())
+            .map(aliquot -> aliquot * base);
+        if (amount.isPresent() && (amount.get() >= retentionType.getMinimumAmount())) {
+            Retention retention = new Retention();
+            retention.setRetentionAmount(amount.get());
+            retention.setDate(startDate);
+            retention.setRetentionType(retentionType);
+            retention.setProvider(provider);
+            Long number = retentionRepository.findMaxRetention(company, retention.getRetentionType());
+            retention.setNumber(Objects.nonNull(number) ? (number + 1) : 1L);
+            retention.setCompany(company);
+            retentionRepository.save(retention);
+            return retention;
         }
-        retention.setCompany(company);
-        retentionRepository.save(retention);
-        return retention;
+        return null;
     }
 
     @Override
     public ResponseEntity<?> findAll() {
-        return null;
+        return new ResponseEntity<>(payOrderRepository.findAll(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> findOnePayOrder(Long id) {
-        return null;
+        Optional<PayOrder> payOrder = payOrderRepository.findById(id);
+        return payOrder.isPresent()
+            ? new ResponseEntity<>(payOrder, HttpStatus.OK)
+            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Override
@@ -136,5 +144,4 @@ public class PayOrderServiceImpl implements PayOrderService {
             return new ResponseEntity<>(payOrderList, HttpStatus.CREATED);
         throw new NotFoundException("PayOrder-service.retention.not-found");
     }
-
 }

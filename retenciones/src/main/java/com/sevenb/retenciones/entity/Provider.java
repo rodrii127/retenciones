@@ -15,6 +15,9 @@ public class Provider {
     private String address;
     private String phone;
     private String fiscalCondition;
+    private Boolean isAgreement = Boolean.FALSE;
+    private Boolean isIibbExcept = Boolean.FALSE;
+    private Boolean isMunicipalityExcept = Boolean.FALSE;
 
     @ManyToOne
     private Company company;
@@ -89,17 +92,44 @@ public class Provider {
         this.company = company;
     }
 
+    public Boolean getAgreement() {
+        return isAgreement;
+    }
+
+    public void setAgreement(Boolean agreement) {
+        isAgreement = agreement;
+    }
+
+    public Boolean getIibbExcept() {
+        return isIibbExcept;
+    }
+
+    public void setIibbExcept(Boolean iibbExcept) {
+        isIibbExcept = iibbExcept;
+    }
+
+    public Boolean getMunicipalityExcept() {
+        return isMunicipalityExcept;
+    }
+
+    public void setMunicipalityExcept(Boolean municipalityExcept) {
+        isMunicipalityExcept = municipalityExcept;
+    }
+
     @Override
     public String toString() {
         return "{\"Provider\":{"
-
-                + "\"id\":\"" + id + "\""
-                + ", \"companyName\":\"" + companyName + "\""
-                + ", \"cuit\":\"" + cuit + "\""
-                + ", \"address\":\"" + address + "\""
-                + ", \"phone\":\"" + phone + "\""
-                + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
-                + ", \"company\":" + company
-                + "}}";
-    }}
+            + "\"id\":\"" + id + "\""
+            + ", \"companyName\":\"" + companyName + "\""
+            + ", \"cuit\":\"" + cuit + "\""
+            + ", \"address\":\"" + address + "\""
+            + ", \"phone\":\"" + phone + "\""
+            + ", \"fiscalCondition\":\"" + fiscalCondition + "\""
+            + ", \"isAgreement\":\"" + isAgreement + "\""
+            + ", \"isIibbExcept\":\"" + isIibbExcept + "\""
+            + ", \"isMunicipalityExcept\":\"" + isMunicipalityExcept + "\""
+            + ", \"company\":" + company
+            + "}}";
+    }
+}
 

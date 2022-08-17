@@ -70,21 +70,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice update(Invoice invoice, Long id) {
+    public Invoice update(InvoiceDto invoiceDto, Long id) {
         Invoice updateInvoice = findById(id);
         if (Objects.isNull(updateInvoice))
             throw new NotFoundException("invoice-service.invoice.not-found");
-        updateInvoice.setNumber(invoice.getNumber());
-        updateInvoice.setPointSale(invoice.getPointSale());
-        updateInvoice.setProvider(invoice.getProvider());
-        updateInvoice.setEngraved(invoice.getEngraved());
-        updateInvoice.setExempt(invoice.getExempt());
-        updateInvoice.setIva105(invoice.getIva105());
-        updateInvoice.setIva21(invoice.getIva21());
-        updateInvoice.setIibb(invoice.getIibb());
-        updateInvoice.setTaxedOthers(invoice.getTaxedOthers());
-        updateInvoice.setMunicipality(invoice.getMunicipality());
-        updateInvoice.setImpacted(invoice.getImpacted());
+        updateInvoice.setNumber(invoiceDto.getNumber());
+        updateInvoice.setPointSale(invoiceDto.getPointSale());
+        updateInvoice.setProvider(providerRepository.findById(invoiceDto.getProvider()).get());
+        updateInvoice.setEngraved(invoiceDto.getEngraved());
+        updateInvoice.setExempt(invoiceDto.getExempt());
+        updateInvoice.setIva105(invoiceDto.getIva105());
+        updateInvoice.setIva21(invoiceDto.getIva21());
+        updateInvoice.setIibb(invoiceDto.getIibb());
+        updateInvoice.setTaxedOthers(invoiceDto.getTaxedOthers());
+        updateInvoice.setMunicipality(invoiceDto.getMunicipality());
+        updateInvoice.setImpacted(invoiceDto.getImpacted());
         return invoiceRepository.save(updateInvoice);
     }
 

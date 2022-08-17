@@ -1,13 +1,19 @@
 package com.sevenb.retenciones.entity;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "retention",uniqueConstraints = {@UniqueConstraint(columnNames =
-        {"number","retention_type_id","company_id"})})
+@Table(name = "retention", uniqueConstraints = {@UniqueConstraint(columnNames =
+    {"number", "retention_type_id", "company_id"})})
 public class Retention {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +28,11 @@ public class Retention {
     private Double retentionAmount;
     @ManyToOne
     private Company company;
-
     @ManyToOne
     private Provider provider;
 
     public Retention() {
+        //No-args constructor
     }
 
 
@@ -94,5 +100,18 @@ public class Retention {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"Retention\":{"
+            + "\"id\":\"" + id + "\""
+            + ", \"number\":\"" + number + "\""
+            + ", \"date\":" + date
+            + ", \"retentionType\":" + retentionType
+            + ", \"retentionAmount\":\"" + retentionAmount + "\""
+            + ", \"company\":" + company
+            + ", \"provider\":" + provider
+            + "}}";
     }
 }

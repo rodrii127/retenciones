@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "invoice")
 public class Invoice {
@@ -168,6 +167,10 @@ public class Invoice {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public Double calculateBase() {
+        return engraved + exempt;
     }
 
     public Double calculateTotal() {
