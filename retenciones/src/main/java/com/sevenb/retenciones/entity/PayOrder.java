@@ -1,9 +1,15 @@
 package com.sevenb.retenciones.entity;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "pay_order")
@@ -27,12 +33,11 @@ public class PayOrder {
     private List<Invoice> invoice;
 
     public PayOrder() {
+        //No-args constructor
     }
 
-
-
-
-    public PayOrder(Long id,  LocalDate date, Provider provider, List<Retention> retentionList, String payOrderNumber, String payMode, String payModeNumber, Company company, List<Invoice> invoice) {
+    public PayOrder(Long id, LocalDate date, Provider provider, List<Retention> retentionList, String payOrderNumber,
+                    String payMode, String payModeNumber, Company company, List<Invoice> invoiceList) {
         this.id = id;
         this.date = date;
         this.provider = provider;
@@ -116,26 +121,40 @@ public class PayOrder {
         this.invoice = invoice;
     }
 
-    public Double calculateMunicipality(){
+    /*public Double calculateMunicipality(){
                 return (calculateBase() * 0.007);
     }
     public Double calculateIibb(){
-        return (calculateBase() * 0.0331);
-    }
-    public Double calculateBase(){
-        final Double[] base = {0D};
-        invoice.forEach(i -> {
-              base[0] = base[0] + i.getEngraved() + i.getExempt();
+        return (calculateBase() * 0.0196);
+    }*/
+
+    public Double calculateBase() {
+        return invoice.stream()
+            .mapToDouble(Invoice::calculateBase)
+            .sum();
+        /*final Double[] base = {0D};
+        invoiceList.forEach(i -> {
+            base[0] = base[0] + i.getEngraved() + i.getExempt();
         });
-        return base[0];
-    }
-    public Double calculateTotal(){
-        final Double[] base = {0D};
-        invoice.forEach(invoice -> {
-                base[0] = base[0] + invoice.calculateTotal();
-            });
-        return base[0];
+        return base[0];*/
     }
 
+    public Double calculateTotal() {
+        return invoice.stream()
+            .mapToDouble(Invoice::calculateTotal)
+            .sum();
+        /*final Double[] base = {0D};
+        invoiceList.forEach(invoice -> {
+            base[0] = base[0] + invoice.calculateTotal();
+        });
+        return base[0];*/
+    }
+
+    public Double calculateTotalWithRetentions() {
+        Double retentionTotal = retentionList.stream()
+            .mapToDouble(Retention::getRetentionAmount)
+            .sum();
+        return this.calculateTotal() - retentionTotal;
+    }
 
 }

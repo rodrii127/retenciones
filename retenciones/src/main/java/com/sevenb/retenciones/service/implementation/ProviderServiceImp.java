@@ -60,7 +60,6 @@ public class ProviderServiceImp implements ProviderService {
     public ResponseEntity<?> findAll(String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         List<Provider> providers = providerRepository.findByCompany(bearerTokenPayloadDto.getCompany()).orElse(null);
-
         if (CollectionUtils.isNotEmpty(providers)) {
             return new ResponseEntity<>(providers, HttpStatus.OK);
         }
@@ -86,6 +85,9 @@ public class ProviderServiceImp implements ProviderService {
             provider.setCuit(providerNew.getCuit());
             provider.setPhone(providerNew.getPhone());
             provider.setFiscalCondition(providerNew.getFiscalCondition());
+            provider.setAgreement(providerNew.getAgreement());
+            provider.setIibbExcept(providerNew.getIibbExcept());
+            provider.setMunicipalityExcept(providerNew.getMunicipalityExcept());
             return new ResponseEntity<>(providerRepository.save(provider), HttpStatus.OK);
         }
         throw new NotFoundException("provider-service.provider.not-found");

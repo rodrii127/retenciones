@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "retention_type")
@@ -16,14 +15,13 @@ public class RetentionType {
     private String description;
     @Column(nullable = false)
     private Double aliquot;
+    @Column(nullable = true)
+    private Double reducedAliquot;
+    @Column(nullable = true)
+    private Double minimumAmount;
 
     public RetentionType() {
-    }
-
-    public RetentionType(Long id, String description, Double aliquot) {
-        this.id = id;
-        this.description = description;
-        this.aliquot = aliquot;
+        //No-args constructor
     }
 
     public Long getId() {
@@ -48,5 +46,32 @@ public class RetentionType {
 
     public void setAliquot(Double aliquot) {
         this.aliquot = aliquot;
+    }
+
+    public Double getMinimumAmount() {
+        return minimumAmount;
+    }
+
+    public void setMinimumAmount(Double minimumAmount) {
+        this.minimumAmount = minimumAmount;
+    }
+
+    public Double getReducedAliquot() {
+        return reducedAliquot;
+    }
+
+    public void setReducedAliquot(Double reducedAliquot) {
+        this.reducedAliquot = reducedAliquot;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"RetentionType\":{"
+            + "\"id\":\"" + id + "\""
+            + ", \"description\":\"" + description + "\""
+            + ", \"aliquot\":\"" + aliquot + "\""
+            + ", \"reducedAliquot\":\"" + reducedAliquot + "\""
+            + ", \"minimumAmount\":\"" + minimumAmount + "\""
+            + "}}";
     }
 }
