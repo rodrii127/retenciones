@@ -24,6 +24,6 @@ public interface RetentionController {
 
 
     @Parameter(name = "searchDate", description = "Generate a retention file between 2 dates", required = true)
-    ResponseEntity<?> retentionMunicipalityCsv(String startDate, String endDate, Long idRetentionType, String bearerToken) throws Exception;
+    ResponseEntity<?> retentionCsv(String startDate, String endDate, Long idRetentionType, String bearerToken) throws Exception;
 
 }
