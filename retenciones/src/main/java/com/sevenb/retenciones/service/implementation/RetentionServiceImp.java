@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.sevenb.retenciones.repository.*;
+import com.sevenb.retenciones.repository.enums.RetentionTypeEnum;
+import com.sevenb.retenciones.utils.RetentionATMCsvUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,11 +20,6 @@ import com.sevenb.retenciones.config.exception.NotFoundException;
 import com.sevenb.retenciones.dto.BearerTokenPayloadDto;
 import com.sevenb.retenciones.entity.Retention;
 import com.sevenb.retenciones.entity.RetentionType;
-import com.sevenb.retenciones.repository.CompanyRepository;
-import com.sevenb.retenciones.repository.InvoiceRepository;
-import com.sevenb.retenciones.repository.RetentionRepositoy;
-import com.sevenb.retenciones.repository.RetentionTypeRepository;
-import com.sevenb.retenciones.repository.UserRepository;
 import com.sevenb.retenciones.security.JWTValidator;
 import com.sevenb.retenciones.service.definition.RetentionService;
 import com.sevenb.retenciones.utils.JWTExtractionUtil;
@@ -39,6 +37,8 @@ public class RetentionServiceImp implements RetentionService {
     private final UserRepository userRepository;
     private final JWTValidator jwtValidator;
     private final JWTExtractionUtil jwtExtractionUtil;
+    MunicipalityCsvUtil municipalityCsvUtil ;
+    RetentionATMCsvUtil retentionATMCsvUtil;
 
 
     @Autowired
@@ -53,6 +53,8 @@ public class RetentionServiceImp implements RetentionService {
         this.userRepository = userRepository;
         this.jwtValidator = jwtValidator;
         this.jwtExtractionUtil = jwtExtractionUtil;
+        this.municipalityCsvUtil = new MunicipalityCsvUtil();
+        this.retentionATMCsvUtil = new RetentionATMCsvUtil();
     }
 
     @Override
@@ -70,20 +72,25 @@ public class RetentionServiceImp implements RetentionService {
     @Override
     public ResponseEntity<?> findOneRetention(Long id) {
         Optional<Retention> retention = retentionRepository.findById(id);
-        if (retention.isPresent()) {
+        if (retention.isPresent())
             return new ResponseEntity<>(retention, HttpStatus.OK);
-        }
+
         throw new NotFoundException("retention-service.retention.not-found");
     }
 
     @Override
-    public File generaFileMunicipality(LocalDate startDate, LocalDate endDate, Long idRetentionType, String bearerToken) throws Exception {
+    public File retentionCsv(LocalDate startDate, LocalDate endDate, Long idRetentionType, String bearerToken) throws Exception {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         RetentionType retentionType = retentionTypeRepository.findById(idRetentionType).get();
         List<Retention> retentionList = retentionRepository.findByDateBetweenAndCompanyAndRetentionType(startDate, endDate,
-            bearerTokenPayloadDto.getCompany(), retentionType);
-        MunicipalityCsvUtil municipalityCsvUtil = new MunicipalityCsvUtil();
-        return municipalityCsvUtil.generaFileMunicipality(retentionList, bearerTokenPayloadDto.getCompany());
+                bearerTokenPayloadDto.getCompany(), retentionType);
+        System.out.println(RetentionTypeEnum.MUNICIPALITY.getValue());
+        if(retentionType.getId().equals(RetentionTypeEnum.MUNICIPALITY.getValue()))
+            return municipalityCsvUtil.generaFileMunicipality(retentionList, bearerTokenPayloadDto.getCompany());
+        if(retentionType.getId().equals(RetentionTypeEnum.ATM.getValue()))
+            return retentionATMCsvUtil.fileAtmCsv(retentionList, bearerTokenPayloadDto.getCompany());
+
+        throw new NotFoundException("retention-service.retention.not-found");
 
     }
 }

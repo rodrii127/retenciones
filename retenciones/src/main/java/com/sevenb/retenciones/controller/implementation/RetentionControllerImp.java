@@ -46,11 +46,11 @@ public class RetentionControllerImp implements RetentionController {
     }
 
     @Override
-    @GetMapping(value = "/retentionCsvMunicipality", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<?> retentionMunicipalityCsv(@RequestParam String startDate, @RequestParam String endDate,
+    @GetMapping(value = "/retentionCsv", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<?> retentionCsv(@RequestParam String startDate, @RequestParam String endDate,
                                                       @RequestParam Long idRetentionType, @RequestHeader("Authorization") String bearerToken) throws Exception {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        File file = retentionService.generaFileMunicipality(LocalDate.parse(startDate, formatter),
+        File file = retentionService.retentionCsv(LocalDate.parse(startDate, formatter),
             LocalDate.parse(endDate, formatter), idRetentionType, bearerToken);
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         HttpHeaders headers = new HttpHeaders();
