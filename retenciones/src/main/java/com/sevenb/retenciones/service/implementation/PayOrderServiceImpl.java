@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.service.implementation;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,5 +144,14 @@ public class PayOrderServiceImpl implements PayOrderService {
         if (payOrderList.isEmpty())
             return new ResponseEntity<>(payOrderList, HttpStatus.CREATED);
         throw new NotFoundException("PayOrder-service.retention.not-found");
+    }
+
+    @Override
+    public FileOutputStream createInfoByDateXls(LocalDate startDate, LocalDate endDate, String bearerToken) {
+        BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
+        List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate, endDate, bearerTokenPayloadDto.getCompany());
+       
+
+        return null;
     }
 }

@@ -20,6 +20,4 @@ public interface PayOrderRepository extends JpaRepository<PayOrder, Long> {
     List<PayOrder> findByDateBetweenAndCompany(LocalDate startDate , LocalDate endDate, Company company);
 
 
-
-
 }

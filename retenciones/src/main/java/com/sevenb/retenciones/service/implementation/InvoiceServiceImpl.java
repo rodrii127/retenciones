@@ -74,6 +74,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice updateInvoice = findById(id);
         if (Objects.isNull(updateInvoice))
             throw new NotFoundException("invoice-service.invoice.not-found");
+        updateInvoice.setDate(invoiceDto.getDate());
         updateInvoice.setNumber(invoiceDto.getNumber());
         updateInvoice.setPointSale(invoiceDto.getPointSale());
         updateInvoice.setProvider(providerRepository.findById(invoiceDto.getProvider()).get());
