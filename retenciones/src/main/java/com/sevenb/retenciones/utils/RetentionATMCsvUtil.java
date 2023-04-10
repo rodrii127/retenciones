@@ -53,7 +53,7 @@ public class RetentionATMCsvUtil {
         try (FileWriter writer = new FileWriter(file)) {
             retentionList.forEach(r->{
                 try {
-                    writer.write(r.getDate()+r.getType()+","+r.getNumber()+","+
+                    writer.write(r.getDate()+","+r.getType()+","+String.format("%20d",r.getNumber())+","+
                             r.getCompanyName()+","+r.getCuit()+","+
                             r.getAmount()
                             +","+r.getAliquot()+"\r\n");
@@ -68,6 +68,8 @@ public class RetentionATMCsvUtil {
         }
 
     }
+
+
 
 
 }

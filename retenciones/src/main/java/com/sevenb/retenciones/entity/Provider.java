@@ -1,10 +1,14 @@
 package com.sevenb.retenciones.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "provider")
-public class Provider {
+public class Provider implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

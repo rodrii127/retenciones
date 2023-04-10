@@ -45,7 +45,7 @@ public class PayOrderControllerImpl implements PayOrderController {
             .body(new InputStreamResource(bis));
     }
     @Override
-    @GetMapping
+    @GetMapping(value = "/payOrderList")
     public ResponseEntity<?> findByDateBetween(@RequestParam String startDate, @RequestParam String endDate,
                                                @RequestHeader("Authorization") String bearerToken) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

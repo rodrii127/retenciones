@@ -1,5 +1,8 @@
 package com.sevenb.retenciones.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Entity;
@@ -13,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "pay_order")
-public class PayOrder {
+public class PayOrder implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,7 @@ public class PayOrder {
     private String payMode;
     private String payModeNumber;
     @ManyToOne(fetch = FetchType.LAZY)
+
     private Company company;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Invoice> invoice;
@@ -46,7 +50,7 @@ public class PayOrder {
         this.payMode = payMode;
         this.payModeNumber = payModeNumber;
         this.company = company;
-        this.invoice = invoice;
+        this.invoice = invoiceList;
     }
 
     public Long getId() {
@@ -132,22 +136,12 @@ public class PayOrder {
         return invoice.stream()
             .mapToDouble(Invoice::calculateBase)
             .sum();
-        /*final Double[] base = {0D};
-        invoiceList.forEach(i -> {
-            base[0] = base[0] + i.getEngraved() + i.getExempt();
-        });
-        return base[0];*/
     }
 
     public Double calculateTotal() {
         return invoice.stream()
             .mapToDouble(Invoice::calculateTotal)
             .sum();
-        /*final Double[] base = {0D};
-        invoiceList.forEach(invoice -> {
-            base[0] = base[0] + invoice.calculateTotal();
-        });
-        return base[0];*/
     }
 
     public Double calculateTotalWithRetentions() {

@@ -9,6 +9,7 @@ import javax.persistence.Table;
 @Table(name = "retention_type")
 public class RetentionType {
 
+
     @Id
     private Long id;
     @Column(nullable = false)

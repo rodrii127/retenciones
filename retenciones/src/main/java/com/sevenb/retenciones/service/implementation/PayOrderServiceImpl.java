@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.persistence.Convert;
 import javax.transaction.Transactional;
 
+import com.sevenb.retenciones.dto.PayOrderOutputDto;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -140,8 +142,20 @@ public class PayOrderServiceImpl implements PayOrderService {
     public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate, endDate, bearerTokenPayloadDto.getCompany());
-        if (payOrderList.isEmpty())
-            return new ResponseEntity<>(payOrderList, HttpStatus.CREATED);
+        List<PayOrderOutputDto> payOrderOutputDtos = new ArrayList<>();
+        for (PayOrder p: payOrderList) {
+            PayOrderOutputDto payOrderOutputDto = new PayOrderOutputDto();
+            payOrderOutputDto.setDate(p.getDate());
+            payOrderOutputDto.setProvider(p.getProvider().getCompanyName());
+            payOrderOutputDto.setCuitProvider(p.getProvider().getCuit());
+            payOrderOutputDto.setNumber(p.getPayOrderNumber());
+            payOrderOutputDto.setBase(p.calculateBase().toString());
+            payOrderOutputDto.setRetention(String.valueOf(p.calculateTotal()-p.calculateTotalWithRetentions()));
+            payOrderOutputDto.setAmountPaid(p.calculateTotalWithRetentions().toString());
+            payOrderOutputDtos.add(payOrderOutputDto);
+        }
+        if (!payOrderList.isEmpty())
+            return new ResponseEntity<>(payOrderOutputDtos, HttpStatus.CREATED);
         throw new NotFoundException("PayOrder-service.retention.not-found");
     }
 }
