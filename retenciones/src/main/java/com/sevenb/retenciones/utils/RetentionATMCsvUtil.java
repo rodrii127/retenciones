@@ -1,5 +1,6 @@
 package com.sevenb.retenciones.utils;
 
+import com.sevenb.retenciones.dto.ConvertInputDto;
 import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
@@ -16,8 +17,6 @@ import java.util.Optional;
 public class RetentionATMCsvUtil {
 
     public File fileAtmCsv(List<Retention> retentionList, Company company) throws Exception {
-
-
         DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String fileName = "RetentionATM.txt";
         File file = new File(fileName);
@@ -27,10 +26,10 @@ public class RetentionATMCsvUtil {
              Double aliquot = validateAliquot(r.getRetentionType(),r.getProvider());
              String date = r.getDate().format(formatDate);
                 try {
-                    writer.write(date+","+r.getNumber()+","+
-                            r.getProvider().getCompanyName()+","+"p,"+r.getProvider().getCuit()+","+
+                    writer.write(date+",CR"+","+String.format("%012d",r.getNumber())+","+
+                            r.getProvider().getCompanyName()+","+r.getProvider().getCuit()+","+
                             String.format("%.2f",r.getRetentionAmount() / aliquot)
-                            +","+String.format("%.2f",aliquot*100)+"\r\n");
+                            +","+String.format("%.2f",aliquot*100)+",,,,"+"\r\n");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -46,6 +45,40 @@ public class RetentionATMCsvUtil {
     public Double validateAliquot(RetentionType retentionType, Provider provider){
                 return  (provider.getAgreement() ? retentionType.getReducedAliquot() : retentionType.getAliquot());
     }
+
+    public File convertFileAtmCsv(List<ConvertInputDto> retentionList) throws Exception {
+        String fileName = "RetentionATMPrueba.txt";
+        File file = new File(fileName);
+        // default, create, truncate and write to it.
+        try (FileWriter writer = new FileWriter(file)) {
+            retentionList.forEach(r->{
+                try {
+                    writer.write(r.getDate()
+                            +","
+                            +r.getType()
+                            +","
+                            +r.getNumber()
+                            +","
+                            +r.getCompanyName()
+                            +","
+                            +r.getCuit()
+                            +","
+                            +r.getAmount()
+                            +","
+                            +r.getAliquot()+",,,,"
+                            +"\r\n");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            return file;
+        }
+        catch (IOException e) {
+            throw new Exception(e.getMessage());
+        }
+
+    }
+
 
 
 

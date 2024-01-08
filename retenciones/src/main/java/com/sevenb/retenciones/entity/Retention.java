@@ -1,5 +1,7 @@
 package com.sevenb.retenciones.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;

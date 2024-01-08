@@ -1,6 +1,7 @@
 package com.sevenb.retenciones.service.definition;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,5 +17,8 @@ public interface PayOrderService {
     public ByteArrayInputStream payOderPdf(Long id);
 
     public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken);
+
+
+    public FileOutputStream createInfoByDateXls(LocalDate startDate, LocalDate endDate, String bearerToken);
 
 }

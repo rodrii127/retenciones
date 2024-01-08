@@ -5,6 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import com.itextpdf.text.pdf.*;
+import org.apache.poi.hssf.record.FooterRecord;
+import org.apache.poi.ss.usermodel.Footer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +20,6 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.sevenb.retenciones.entity.PayOrder;
 import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
@@ -216,6 +213,10 @@ public class PayOrderPdf {
             firma.add("FIRMA Y SELLO");
             firma.setAlignment(Element.ALIGN_CENTER);
             document.add(firma);
+            Font fontFooter = new Font(Font.FontFamily.TIMES_ROMAN, .50f, Font.BOLD, BaseColor.BLACK);
+            Phrase phraseFooter = new Phrase("Comprobante emitido por Seven b SRL Retenciones Cel:3764-900722 ");
+            phraseFooter.setFont(fontFooter);
+            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER,phraseFooter,300,20,0);
             document.add(Chunk.NEXTPAGE);
             document.close();
             return mergePdf(payOrder.getRetentionList(), payOrder.getProvider(), out);
@@ -257,5 +258,10 @@ public class PayOrderPdf {
             throw new RuntimeException(e);
 
         }
+    }
+
+
+     public void onEndPage(PdfWriter writer, Document document) {
+        ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, new Phrase("Fin de Pagina - El lado oscuro de Java"),200,20,0);
     }
 }

@@ -1,5 +1,6 @@
 package com.sevenb.retenciones.service.definition;
 
+import com.sevenb.retenciones.dto.ConvertInputDto;
 import com.sevenb.retenciones.dto.RetentionInputDto;
 import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Retention;
@@ -21,4 +22,5 @@ public interface RetentionService {
     //public ByteArrayInputStream retentionPdf(Long id);
     public File retentionCsv(LocalDate startDate, LocalDate endDate, Long idRetentionType, String bearerToken) throws Exception;
 
+    public File convertRetentionAtmCsv(List<ConvertInputDto> listRetention) throws Exception;
 }

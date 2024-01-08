@@ -2,9 +2,11 @@ package com.sevenb.retenciones.service.implementation;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.sevenb.retenciones.dto.ConvertInputDto;
 import com.sevenb.retenciones.repository.*;
 import com.sevenb.retenciones.repository.enums.RetentionTypeEnum;
 import com.sevenb.retenciones.utils.RetentionATMCsvUtil;
@@ -91,7 +93,10 @@ public class RetentionServiceImp implements RetentionService {
             return retentionATMCsvUtil.fileAtmCsv(retentionList, bearerTokenPayloadDto.getCompany());
 
         throw new NotFoundException("retention-service.retention.not-found");
+    }
 
+    public File convertRetentionAtmCsv(List<ConvertInputDto> listRetention) throws Exception {
+              return retentionATMCsvUtil.convertFileAtmCsv(listRetention);
     }
 }
 
