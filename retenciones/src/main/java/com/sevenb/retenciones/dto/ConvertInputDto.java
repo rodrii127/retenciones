@@ -3,7 +3,6 @@ package com.sevenb.retenciones.dto;
 import java.time.LocalDate;
 
 public class ConvertInputDto {
-
     private String key;
    private String date;
    private String type;

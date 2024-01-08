@@ -12,7 +12,7 @@ import com.sevenb.retenciones.service.definition.RetentionTypeService;
 @Service
 public class RetentionTypeServiceImpl implements RetentionTypeService {
 
-    private final RetentionTypeRepository retentionTypeRepository;
+        private final RetentionTypeRepository retentionTypeRepository;
 
     public RetentionTypeServiceImpl(RetentionTypeRepository retentionTypeRepository) {
         this.retentionTypeRepository = retentionTypeRepository;

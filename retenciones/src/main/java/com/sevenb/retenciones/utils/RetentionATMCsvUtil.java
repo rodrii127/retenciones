@@ -26,10 +26,10 @@ public class RetentionATMCsvUtil {
              Double aliquot = validateAliquot(r.getRetentionType(),r.getProvider());
              String date = r.getDate().format(formatDate);
                 try {
-                    writer.write(date+",CR,"+","+String.format("%012d",r.getNumber())+","+
+                    writer.write(date+",CR"+","+String.format("%012d",r.getNumber())+","+
                             r.getProvider().getCompanyName()+","+r.getProvider().getCuit()+","+
                             String.format("%.2f",r.getRetentionAmount() / aliquot)
-                            +","+String.format("%.2f",aliquot*100)+"\r\n");
+                            +","+String.format("%.2f",aliquot*100)+",,,,"+"\r\n");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -53,10 +53,20 @@ public class RetentionATMCsvUtil {
         try (FileWriter writer = new FileWriter(file)) {
             retentionList.forEach(r->{
                 try {
-                    writer.write(r.getDate()+","+r.getType()+","+String.format("%20d",r.getNumber())+","+
-                            r.getCompanyName()+","+r.getCuit()+","+
-                            r.getAmount()
-                            +","+r.getAliquot()+"\r\n");
+                    writer.write(r.getDate()
+                            +","
+                            +r.getType()
+                            +","
+                            +r.getNumber()
+                            +","
+                            +r.getCompanyName()
+                            +","
+                            +r.getCuit()
+                            +","
+                            +r.getAmount()
+                            +","
+                            +r.getAliquot()+",,,,"
+                            +"\r\n");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
