@@ -1,7 +1,5 @@
 package com.sevenb.retenciones.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,20 +19,28 @@ public class PayOrder implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String payOrderNumber;
+
     private LocalDate date;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Provider provider;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Retention> retentionList;
 
     private String payMode;
-    private String payModeNumber;
-    @ManyToOne(fetch = FetchType.LAZY)
 
+    private String payModeNumber;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Invoice> invoice;
+
+    private boolean active = true;
 
     public PayOrder() {
         //No-args constructor
@@ -125,6 +131,14 @@ public class PayOrder implements Serializable {
         this.invoice = invoice;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     /*public Double calculateMunicipality(){
                 return (calculateBase() * 0.007);
     }
@@ -151,4 +165,19 @@ public class PayOrder implements Serializable {
         return this.calculateTotal() - retentionTotal;
     }
 
+    @Override
+    public String toString() {
+        return "{\"PayOrder\":{"
+            + "\"id\":\"" + id + "\""
+            + ", \"payOrderNumber\":\"" + payOrderNumber + "\""
+            + ", \"date\":" + date
+            + ", \"provider\":" + provider
+            + ", \"retentionList\":" + retentionList
+            + ", \"payMode\":\"" + payMode + "\""
+            + ", \"payModeNumber\":\"" + payModeNumber + "\""
+            + ", \"company\":" + company
+            + ", \"invoice\":" + invoice
+            + ", \"active\":\"" + active + "\""
+            + "}}";
+    }
 }
