@@ -8,17 +8,17 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 public interface PayOrderService {
-    public ResponseEntity<?> savePayOrder(List<Long> idRetentions, LocalDate startDate, String bearerToken);
+    ResponseEntity<?> savePayOrder(List<Long> idRetentions, LocalDate startDate, String bearerToken);
 
-    public ResponseEntity<?> findAll();
+    ResponseEntity<?> findAll(LocalDate startDate, LocalDate endDate, Long providerId, String bearerToken);
 
-    public ResponseEntity<?> findOnePayOrder(Long id);
+    ResponseEntity<?> findOnePayOrder(Long id);
 
-    public ByteArrayInputStream payOderPdf(Long id);
+    ByteArrayInputStream payOderPdf(Long id);
 
-    public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken);
+    ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken);
 
+    FileOutputStream createInfoByDateXls(LocalDate startDate, LocalDate endDate, String bearerToken);
 
-    public FileOutputStream createInfoByDateXls(LocalDate startDate, LocalDate endDate, String bearerToken);
-
+    void deleteById(Long id, boolean logicalDelete, String bearerToken);
 }

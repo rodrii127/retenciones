@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.persistence.Convert;
 import javax.transaction.Transactional;
 
-import com.sevenb.retenciones.dto.PayOrderOutputDto;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -20,19 +18,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.sevenb.retenciones.config.exception.NotFoundException;
 import com.sevenb.retenciones.dto.BearerTokenPayloadDto;
+import com.sevenb.retenciones.dto.PayOrderOutputDto;
 import com.sevenb.retenciones.entity.Company;
 import com.sevenb.retenciones.entity.Invoice;
 import com.sevenb.retenciones.entity.PayOrder;
 import com.sevenb.retenciones.entity.Provider;
 import com.sevenb.retenciones.entity.Retention;
 import com.sevenb.retenciones.entity.RetentionType;
-import com.sevenb.retenciones.repository.CompanyRepository;
 import com.sevenb.retenciones.repository.InvoiceRepository;
 import com.sevenb.retenciones.repository.PayOrderRepository;
-import com.sevenb.retenciones.repository.ProviderRepository;
 import com.sevenb.retenciones.repository.RetentionRepositoy;
 import com.sevenb.retenciones.repository.RetentionTypeRepository;
-import com.sevenb.retenciones.repository.UserRepository;
 import com.sevenb.retenciones.service.definition.PayOrderService;
 import com.sevenb.retenciones.utils.JWTExtractionUtil;
 import com.sevenb.retenciones.utils.PayOrderPdf;
@@ -42,25 +38,40 @@ public class PayOrderServiceImpl implements PayOrderService {
 
     private final RetentionRepositoy retentionRepository;
     private final InvoiceRepository invoiceRepository;
-    private final CompanyRepository companyRepository;
     private final PayOrderRepository payOrderRepository;
-    private final UserRepository userRepository;
-    private final ProviderRepository providerRepository;
     private final RetentionTypeRepository retentionTypeRepository;
     private final JWTExtractionUtil jwtExtractionUtil;
 
     public PayOrderServiceImpl(RetentionRepositoy retentionRepository, InvoiceRepository invoiceRepository,
-                               CompanyRepository companyRepository, PayOrderRepository payOrderRepository,
-                               UserRepository userRepository, ProviderRepository providerRepository,
-                               RetentionTypeRepository retentionTypeRepository, JWTExtractionUtil jwtExtractionUtil) {
+                               PayOrderRepository payOrderRepository, RetentionTypeRepository retentionTypeRepository,
+                               JWTExtractionUtil jwtExtractionUtil) {
         this.retentionRepository = retentionRepository;
         this.invoiceRepository = invoiceRepository;
-        this.companyRepository = companyRepository;
         this.payOrderRepository = payOrderRepository;
-        this.userRepository = userRepository;
-        this.providerRepository = providerRepository;
         this.retentionTypeRepository = retentionTypeRepository;
         this.jwtExtractionUtil = jwtExtractionUtil;
+    }
+
+    @Override
+    public ResponseEntity<?> findAll(LocalDate startDate, LocalDate endDate, Long providerId, String bearerToken) {
+        BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
+
+        List<PayOrder> payOrderList = payOrderRepository.findAllWithFilters(startDate, endDate, providerId, bearerTokenPayloadDto.getCompany().getId());
+        List<PayOrderOutputDto> payOrderOutputDtos = new ArrayList<>();
+        for (PayOrder p : payOrderList) {
+            PayOrderOutputDto payOrderOutputDto = new PayOrderOutputDto();
+            payOrderOutputDto.setDate(p.getDate());
+            payOrderOutputDto.setProvider(p.getProvider().getCompanyName());
+            payOrderOutputDto.setCuitProvider(p.getProvider().getCuit());
+            payOrderOutputDto.setNumber(p.getPayOrderNumber());
+            payOrderOutputDto.setBase(p.calculateBase().toString());
+            payOrderOutputDto.setRetention(String.valueOf(p.calculateTotal() - p.calculateTotalWithRetentions()));
+            payOrderOutputDto.setAmountPaid(p.calculateTotalWithRetentions().toString());
+            payOrderOutputDtos.add(payOrderOutputDto);
+        }
+        if (!payOrderList.isEmpty())
+            return new ResponseEntity<>(payOrderOutputDtos, HttpStatus.CREATED);
+        throw new NotFoundException("PayOrder-service.retention.not-found");
     }
 
     @Override
@@ -118,11 +129,6 @@ public class PayOrderServiceImpl implements PayOrderService {
     }
 
     @Override
-    public ResponseEntity<?> findAll() {
-        return new ResponseEntity<>(payOrderRepository.findAll(), HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<?> findOnePayOrder(Long id) {
         Optional<PayOrder> payOrder = payOrderRepository.findById(id);
         return payOrder.isPresent()
@@ -139,19 +145,20 @@ public class PayOrderServiceImpl implements PayOrderService {
         throw new NotFoundException("payOrder-service.retention.not-found");
     }
 
+    /*TODO desde mi punto de vista esto debe borrarse*/
     @Override
     public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate, endDate, bearerTokenPayloadDto.getCompany());
         List<PayOrderOutputDto> payOrderOutputDtos = new ArrayList<>();
-        for (PayOrder p: payOrderList) {
+        for (PayOrder p : payOrderList) {
             PayOrderOutputDto payOrderOutputDto = new PayOrderOutputDto();
             payOrderOutputDto.setDate(p.getDate());
             payOrderOutputDto.setProvider(p.getProvider().getCompanyName());
             payOrderOutputDto.setCuitProvider(p.getProvider().getCuit());
             payOrderOutputDto.setNumber(p.getPayOrderNumber());
             payOrderOutputDto.setBase(p.calculateBase().toString());
-            payOrderOutputDto.setRetention(String.valueOf(p.calculateTotal()-p.calculateTotalWithRetentions()));
+            payOrderOutputDto.setRetention(String.valueOf(p.calculateTotal() - p.calculateTotalWithRetentions()));
             payOrderOutputDto.setAmountPaid(p.calculateTotalWithRetentions().toString());
             payOrderOutputDtos.add(payOrderOutputDto);
         }
@@ -164,8 +171,34 @@ public class PayOrderServiceImpl implements PayOrderService {
     public FileOutputStream createInfoByDateXls(LocalDate startDate, LocalDate endDate, String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate, endDate, bearerTokenPayloadDto.getCompany());
-       
 
         return null;
+    }
+
+    @Override
+    public void deleteById(Long id, boolean logicalDelete, String bearerToken) {
+        Optional<PayOrder> optionalPayOrder = payOrderRepository.findById(id);
+        if (optionalPayOrder.isEmpty())
+            throw new NotFoundException("payOrder-service.pay-order.not-found");
+        PayOrder payOrder = optionalPayOrder.get();
+        if (!isSameCompany(payOrder, bearerToken))
+            throw new NotFoundException("payOrder-service.pay-order.not-found");
+
+        if (logicalDelete) {
+            payOrder.setActive(false);
+            payOrderRepository.save(payOrder);
+        } else {
+            payOrderRepository.deleteById(id);
+        }
+    }
+
+    private boolean isSameCompany(PayOrder payOrder, String bearerToken) {
+        BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
+        return Optional.ofNullable(payOrder.getCompany())
+            .map(Company::getId)
+            .map(id -> id.equals(Optional.ofNullable(bearerTokenPayloadDto.getCompany())
+                .map(Company::getId)
+                .orElse(null)))
+            .orElse(false);
     }
 }

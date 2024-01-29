@@ -3,13 +3,14 @@ package com.sevenb.retenciones.dto;
 import java.time.LocalDate;
 
 public class PayOrderOutputDto {
+
+    private Long id;
     private LocalDate date;
     private String number;
     private String provider;
     private String cuitProvider;
     private String base;
     private String retention;
-
     private String amountPaid;
 
     public String getRetention() {
