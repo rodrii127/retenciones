@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "d60d934f-1280-4d50-bca4-e69f92995db7",
+		"name": "Retenciones Back",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15483702",
+		"_collection_link": "https://galactic-crescent-541599.postman.co/workspace/Team-Workspace~92b6ff96-54de-4428-87b0-0d03f4e0365f/collection/15483702-d60d934f-1280-4d50-bca4-e69f92995db7?action=share&source=collection_link&creator=15483702"
+	},
+	"item": [
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "Create Invoice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"pointSale\": \"1\",\n    \"number\": 100,\n    \"provider\": 1,\n    \"date\": \"2024-01-01\",\n    \"engraved\": 123,\n    \"exempt\": 144,\n    \"iva105\": 123,\n    \"iva21\": 123,\n    \"iibb\": 123,\n    \"taxedOthers\": 123,\n    \"municipality\": 123,\n    \"impacted\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/retenciones/invoice",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"retenciones",
+								"invoice"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pay Order",
+			"item": [
+				{
+					"name": "Create Pay Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api-token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idInvoices\": [\n        \"1\"\n    ],\n    \"startDate\": \"2024-01-02\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/v1/retenciones/pay-order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"retenciones",
+								"pay-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find All Pay Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/retenciones/pay-order?startDate=2023-02-02&endDate=2024-02-02&providerId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"retenciones",
+								"pay-order"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2023-02-02"
+								},
+								{
+									"key": "endDate",
+									"value": "2024-02-02"
+								},
+								{
+									"key": "providerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Pay Order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{api-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/v1/retenciones/pay-order/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"v1",
+								"retenciones",
+								"pay-order",
+								"1"
+							],
+							"query": [
+								{
+									"key": "logicalDelete",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonResponse = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"api-token\", jsonResponse.loginToken);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"admin@hotmail.com\",\n    \"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/retenciones/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"retenciones",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
