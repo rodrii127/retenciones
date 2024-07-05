@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RetentionATMCsvUtil {
 
@@ -47,8 +48,10 @@ public class RetentionATMCsvUtil {
     }
 
     public File convertFileAtmCsv(List<ConvertInputDto> retentionList) throws Exception {
+
         String fileName = "RetentionATMPrueba.txt";
         File file = new File(fileName);
+
         // default, create, truncate and write to it.
         try (FileWriter writer = new FileWriter(file)) {
             retentionList.forEach(r->{

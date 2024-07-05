@@ -57,6 +57,7 @@ public class PayOrderServiceImpl implements PayOrderService {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
 
         List<PayOrder> payOrderList = payOrderRepository.findAllWithFilters(startDate, endDate, providerId, bearerTokenPayloadDto.getCompany().getId());
+        payOrderList = payOrderList.stream().filter(f-> !Boolean.FALSE.equals(f.getActive())).collect(Collectors.toList());
         List<PayOrderOutputDto> payOrderOutputDtos = new ArrayList<>();
         for (PayOrder p : payOrderList) {
             PayOrderOutputDto payOrderOutputDto = new PayOrderOutputDto();
@@ -150,20 +151,22 @@ public class PayOrderServiceImpl implements PayOrderService {
     public ResponseEntity<?> findByDateBetween(LocalDate startDate, LocalDate endDate, String bearerToken) {
         BearerTokenPayloadDto bearerTokenPayloadDto = jwtExtractionUtil.getPayloadFromToken(bearerToken);
         List<PayOrder> payOrderList = payOrderRepository.findByDateBetweenAndCompany(startDate, endDate, bearerTokenPayloadDto.getCompany());
+        payOrderList = payOrderList.stream().filter(f-> !Boolean.FALSE.equals(f.getActive())).collect(Collectors.toList());
         List<PayOrderOutputDto> payOrderOutputDtos = new ArrayList<>();
         for (PayOrder p : payOrderList) {
             PayOrderOutputDto payOrderOutputDto = new PayOrderOutputDto();
+            payOrderOutputDto.setId(p.getId());
             payOrderOutputDto.setDate(p.getDate());
             payOrderOutputDto.setProvider(p.getProvider().getCompanyName());
             payOrderOutputDto.setCuitProvider(p.getProvider().getCuit());
             payOrderOutputDto.setNumber(p.getPayOrderNumber());
-            payOrderOutputDto.setBase(p.calculateBase().toString());
-            payOrderOutputDto.setRetention(String.valueOf(p.calculateTotal() - p.calculateTotalWithRetentions()));
-            payOrderOutputDto.setAmountPaid(p.calculateTotalWithRetentions().toString());
+            payOrderOutputDto.setBase(String.format("%.2f",p.calculateBase()));
+            payOrderOutputDto.setRetention(String.format("%.2f",(p.calculateTotal() - p.calculateTotalWithRetentions())));
+            payOrderOutputDto.setAmountPaid(String.format("%.2f",p.calculateTotalWithRetentions()));
             payOrderOutputDtos.add(payOrderOutputDto);
         }
         if (!payOrderList.isEmpty())
-            return new ResponseEntity<>(payOrderOutputDtos, HttpStatus.CREATED);
+            return new ResponseEntity<>(payOrderOutputDtos, HttpStatus.OK);
         throw new NotFoundException("PayOrder-service.retention.not-found");
     }
 
@@ -186,6 +189,14 @@ public class PayOrderServiceImpl implements PayOrderService {
 
         if (logicalDelete) {
             payOrder.setActive(false);
+            for (Invoice invoice:payOrder.getInvoice()){
+                invoice.setImpacted(false);
+            }
+            payOrderRepository.save(payOrder);
+            payOrder.setInvoice(null);
+            for (Retention retention:payOrder.getRetentionList()){
+                retention.setLogicalDelete(true);
+            }
             payOrderRepository.save(payOrder);
         } else {
             payOrderRepository.deleteById(id);

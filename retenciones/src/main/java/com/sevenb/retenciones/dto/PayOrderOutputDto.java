@@ -68,4 +68,12 @@ public class PayOrderOutputDto {
     public void setAmountPaid(String amountPaid) {
         this.amountPaid = amountPaid;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
