@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.sevenb.retenciones.dto.ConvertInputDto;
 import com.sevenb.retenciones.repository.*;
@@ -87,8 +86,6 @@ public class RetentionServiceImp implements RetentionService {
         RetentionType retentionType = retentionTypeRepository.findById(idRetentionType).get();
         List<Retention> retentionList = retentionRepository.findByDateBetweenAndCompanyAndRetentionType(startDate, endDate,
                 bearerTokenPayloadDto.getCompany(), retentionType);
-        retentionList = retentionList.stream()
-                .filter(r -> !Boolean.TRUE.equals(r.getLogicalDelete())).collect(Collectors.toList());
         System.out.println(RetentionTypeEnum.MUNICIPALITY.getValue());
         if(retentionType.getId().equals(RetentionTypeEnum.MUNICIPALITY.getValue()))
             return municipalityCsvUtil.generaFileMunicipality(retentionList, bearerTokenPayloadDto.getCompany());

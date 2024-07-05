@@ -40,15 +40,14 @@ public class PayOrder implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Invoice> invoice;
 
-    private Boolean active = true;
+    private boolean active = true;
 
     public PayOrder() {
         //No-args constructor
     }
 
     public PayOrder(Long id, LocalDate date, Provider provider, List<Retention> retentionList, String payOrderNumber,
-                    String payMode, String payModeNumber, Company company,
-                    List<Invoice> invoiceList, Boolean active) {
+                    String payMode, String payModeNumber, Company company, List<Invoice> invoiceList) {
         this.id = id;
         this.date = date;
         this.provider = provider;
@@ -58,7 +57,6 @@ public class PayOrder implements Serializable {
         this.payModeNumber = payModeNumber;
         this.company = company;
         this.invoice = invoiceList;
-        this.active = active;
     }
 
     public Long getId() {
@@ -165,14 +163,6 @@ public class PayOrder implements Serializable {
             .mapToDouble(Retention::getRetentionAmount)
             .sum();
         return this.calculateTotal() - retentionTotal;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
     @Override

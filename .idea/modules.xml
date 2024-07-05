@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.sevenb.retenciones.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.sevenb.retenciones.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/retenciones.iml" filepath="$PROJECT_DIR$/.idea/retenciones.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/retenciones.main.iml" filepath="$PROJECT_DIR$/.idea/modules/retenciones.main.iml" />
     </modules>
   </component>
 </project>
