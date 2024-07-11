@@ -78,8 +78,8 @@ public class PayOrderControllerImpl implements PayOrderController {
     }
 
     private LocalDate parseDate(String date) {
-        return Optional.ofNullable(date)
-            .map(optDate -> LocalDate.parse(optDate, DATE_TIME_FORMATTER))
-            .orElse(null);
+        return Optional.ofNullable(date).map((optDate) -> {
+            return LocalDate.parse(optDate, DATE_TIME_FORMATTER);
+        }).orElse((LocalDate) null);
     }
 }
