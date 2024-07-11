@@ -32,6 +32,8 @@ public class Retention {
     private Company company;
     @ManyToOne
     private Provider provider;
+    private Boolean logicalDelete;
+
 
     public Retention() {
         //No-args constructor
@@ -102,6 +104,14 @@ public class Retention {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public Boolean getLogicalDelete() {
+        return logicalDelete;
+    }
+
+    public void setLogicalDelete(Boolean logicalDelete) {
+        this.logicalDelete = logicalDelete;
     }
 
     @Override
